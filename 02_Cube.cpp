@@ -6,7 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "shader.h"
+#include "Shader.h"
+#include "Model.h"
 
 using namespace glm;
 
@@ -56,10 +57,11 @@ int main()
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
     
-    Shader shader( "../shaders/02_vs.glsl", "../shaders/02_fs.glsl");
+    Shader shader( "../shaders/Model.vs", "../shaders/Model.fs");
 
     int vSize = 6 * sizeof(float);
     float vertices[] = {
+        // positions          // vcols
         -0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,
         -0.5f, 0.5f, 0.0f,    0.0f, 1.0f, 0.0f,
         0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 1.0f,
@@ -73,7 +75,7 @@ int main()
     };
     int iLen = sizeof(indices)/sizeof(indices[0]);
 
-    unsigned int VAO = genModel(vertices, vLen, indices, iLen, vSize);
+    Model cube(vertices, vLen, indices, iLen, vSize, shader);
 
     // render loop
     // -----------
@@ -82,26 +84,24 @@ int main()
         // input
         // -----
         processInput(window);
-
+        
         // render
         // ------
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shader.use();
-
-        mat4 model = mat4(1.0f);
-        model = rotate(model, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
-        shader.setMat4("uModel", model);
+        float time = glfwGetTime();
+        
+        cube.SetRotation(time*100, vec3(1.0f, 0.0f, 0.0f));
+        // cube.SetScale(vec3(glm::sin(time), 1.0f, 1.0f));
+        // cube.SetTranslation(vec3(0.0f, glm::sin(time), 1.0f));
+        
         mat4 view = mat4(1.0f);
         view = translate(view, vec3(0.0f, 0.0f, -3.0f));
-        shader.setMat4("uView", view);
         mat4 projection;
         projection = perspective(radians(45.0f), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.0f);
-        shader.setMat4("uProjection", projection);
 
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);        
+        cube.Draw(view, projection);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -113,28 +113,6 @@ int main()
     // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
-}
-
-unsigned int genModel(float* vertices, int vLen, unsigned int* indices, int iLen, int stride) {
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-    
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vLen * sizeof(vertices[0]), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3* sizeof(float)));
-    glEnableVertexAttribArray(1);
-    
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, iLen * sizeof(indices[0]), indices, GL_STATIC_DRAW);
-
-    return VAO;
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly

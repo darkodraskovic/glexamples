@@ -5,13 +5,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(include)
 
-set(SOURCE_FILES_PLAYGROUND glad.c 00_playground.cpp)
-set(SOURCE_FILES_WINDOW glad.c 01_window.cpp)
-set(SOURCE_FILES_CUBE glad.c 02_cube.cpp)
+file(GLOB SOURCES "src/*.c" "src/*.cpp")
 
-add_executable(playground ${SOURCE_FILES_PLAYGROUND})
-add_executable(window ${SOURCE_FILES_WINDOW})
-add_executable(cube ${SOURCE_FILES_CUBE})
+add_executable(playground 00_Playground.cpp ${SOURCES})
+add_executable(window 01_Window.cpp ${SOURCES})
+add_executable(cube 02_Cube.cpp ${SOURCES})
 
 target_link_libraries(playground GL GLU glfw dl)
 target_link_libraries(window GL GLU glfw dl)
