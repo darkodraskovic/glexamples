@@ -11,6 +11,6 @@ out vec3 VCol;
 
 void main()
 {
-    gl_Position = uProjection * uView * uModel * vec4(aPos.x, aPos.y, aPos.z, 1.0);
+    gl_Position = uProjection * uView * uModel * vec4(aPos, 1.0);
     VCol = aVCol;
 }

@@ -7,12 +7,10 @@
 
 #include "Shader.h"
 
-using namespace glm;
-
 class Model
 {
  public:
-    Model(float* vertices, int vLen, unsigned int* indices, int iLen, int stride, const Shader& shader);
+    Model(glm::vec3* vertices, int vLen, unsigned int* indices, int iLen, const Shader& shader);
     void Draw(const glm::mat4& uView, const glm::mat4& uProjection);
     void SetVertices(float* vertices, int vLen);
     void SetIndices(float* indices, int iLen);
@@ -27,13 +25,13 @@ class Model
     int vLen_;
     int iLen_;
 
-    mat4 id_;
-    mat4 rotation_;
-    mat4 scale_;
-    mat4 translation_;
-    mat4 transform_;
+    glm::mat4 id_;
+    glm::mat4 rotation_;
+    glm::mat4 scale_;
+    glm::mat4 translation_;
+    glm::mat4 transform_;
     
-    float* vertices_;
+    glm::vec3* vertices_;
     unsigned int* indices_;
 };
 

@@ -7,8 +7,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.h"
+#include "cc.h"
 #include "Model.h"
 
+using namespace std;
 using namespace glm;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -59,23 +61,46 @@ int main()
     
     Shader shader( "../shaders/Model.vs", "../shaders/Model.fs");
 
-    int vSize = 6 * sizeof(float);
-    float vertices[] = {
-        // positions          // vcols
-        -0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.0f,    0.0f, 1.0f, 0.0f,
-        0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 1.0f,
-        0.5f, -0.5f, 0.0f,    1.0f, 0.0f, 1.0f,
-    };
-    int vLen = sizeof(vertices)/sizeof(vertices[0]);
+    // cube
+    // ----
+    vec3 frontBL(-0.5f, -0.5f, 0.5f);
+    vec3 frontTL(-0.5f, 0.5f, 0.5f);
+    vec3 frontTR(0.5f, 0.5f, 0.5f);
+    vec3 frontBR(0.5f, -0.5f, 0.5f);
+    vec3 backBL = frontBL + cc::BACK;
+    vec3 backTL = frontTL + cc::BACK;
+    vec3 backTR = frontTR + cc::BACK;
+    vec3 backBR = frontBR + cc::BACK;
 
-    unsigned int indices[] = {  
+    vec3 vertices[] = {
+        // front
+        frontBL, cc::RED, frontBR, cc::GREEN, frontTR, cc::BLUE, frontTL, cc::MAGENTA,
+        // back
+        backBR, cc::RED, backBL, cc::GREEN, backTL, cc::BLUE, backTR, cc::CYAN,
+        // left
+        backBL, cc::RED, frontBL, cc::GREEN, frontTL, cc::BLUE, backTL, cc::MAGENTA,
+        // right
+        frontBR, cc::RED, backBR, cc::GREEN, backTR, cc::BLUE, frontTR, cc::CYAN,          
+    };
+    int vLen = 16;
+    
+    unsigned int indices[] = {
+        // front
         0, 1, 2,
         0, 2, 3,
+        // back
+        4, 5, 6,
+        4, 6, 7,
+        // left
+        8, 9, 10,
+        8, 10, 11,
+        // left
+        12, 13, 14,
+        12, 14, 15,
     };
     int iLen = sizeof(indices)/sizeof(indices[0]);
 
-    Model cube(vertices, vLen, indices, iLen, vSize, shader);
+    Model cube(vertices, vLen, indices, iLen, shader);
 
     // render loop
     // -----------
@@ -92,12 +117,12 @@ int main()
 
         float time = glfwGetTime();
         
-        cube.SetRotation(time*100, vec3(1.0f, 0.0f, 0.0f));
+        cube.SetRotation(time*100, cc::ONE);
         // cube.SetScale(vec3(glm::sin(time), 1.0f, 1.0f));
         // cube.SetTranslation(vec3(0.0f, glm::sin(time), 1.0f));
         
         mat4 view = mat4(1.0f);
-        view = translate(view, vec3(0.0f, 0.0f, -3.0f));
+        view = translate(view, vec3(0.0f, 0.0f, -6.0f));
         mat4 projection;
         projection = perspective(radians(45.0f), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.0f);
 
