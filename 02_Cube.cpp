@@ -1,14 +1,17 @@
 #include <iostream>
+#include <vector>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "zzz.h"
 
 #include "Shader.h"
-#include "cc.h"
+
 #include "Model.h"
+#include "src/Cube.cpp"
 
 using namespace std;
 using namespace glm;
@@ -55,53 +58,29 @@ int main()
         return -1;
     }
 
-// configure global opengl state
+
+    // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
     
-    Shader shader( "../shaders/Model.vs", "../shaders/Model.fs");
-
-    // cube
-    // ----
-    vec3 frontBL(-0.5f, -0.5f, 0.5f);
-    vec3 frontTL(-0.5f, 0.5f, 0.5f);
-    vec3 frontTR(0.5f, 0.5f, 0.5f);
-    vec3 frontBR(0.5f, -0.5f, 0.5f);
-    vec3 backBL = frontBL + cc::BACK;
-    vec3 backTL = frontTL + cc::BACK;
-    vec3 backTR = frontTR + cc::BACK;
-    vec3 backBR = frontBR + cc::BACK;
-
-    vec3 vertices[] = {
-        // front
-        frontBL, cc::RED, frontBR, cc::GREEN, frontTR, cc::BLUE, frontTL, cc::MAGENTA,
-        // back
-        backBR, cc::RED, backBL, cc::GREEN, backTL, cc::BLUE, backTR, cc::CYAN,
-        // left
-        backBL, cc::RED, frontBL, cc::GREEN, frontTL, cc::BLUE, backTL, cc::MAGENTA,
-        // right
-        frontBR, cc::RED, backBR, cc::GREEN, backTR, cc::BLUE, frontTR, cc::CYAN,          
-    };
-    int vLen = 16;
+    Shader vColShader( "../shaders/VCol.vs", "../shaders/VCol.fs");
     
-    unsigned int indices[] = {
-        // front
-        0, 1, 2,
-        0, 2, 3,
-        // back
-        4, 5, 6,
-        4, 6, 7,
-        // left
-        8, 9, 10,
-        8, 10, 11,
-        // left
-        12, 13, 14,
-        12, 14, 15,
-    };
-    int iLen = sizeof(indices)/sizeof(indices[0]);
+    Cube cube1(vColShader);
+    
+    Cube cube2(vColShader);
+    cube2.SetScale(glm::vec3(0.5, 2.0, 0.5));
+    cube2.SetTranslation(zzz::LEFT + zzz::LEFT);
 
-    Model cube(vertices, vLen, indices, iLen, shader);
+    Cube cube3(vColShader);
+    cube3.SetScale(glm::vec3(0.3, 0.3, 0.3));
+    cube3.SetTranslation(zzz::RIGHT + zzz::RIGHT);
 
+    // model vector
+    std::vector<Model*> models;
+    models.push_back(&cube1);
+    models.push_back(&cube2);
+    models.push_back(&cube3);
+    
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -117,17 +96,16 @@ int main()
 
         float time = glfwGetTime();
         
-        cube.SetRotation(time*100, cc::ONE);
-        // cube.SetScale(vec3(glm::sin(time), 1.0f, 1.0f));
-        // cube.SetTranslation(vec3(0.0f, glm::sin(time), 1.0f));
-        
         mat4 view = mat4(1.0f);
         view = translate(view, vec3(0.0f, 0.0f, -6.0f));
         mat4 projection;
         projection = perspective(radians(45.0f), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.0f);
 
-        cube.Draw(view, projection);
-
+        for(std::vector<Model*>::iterator it = models.begin(); it != models.end(); ++it) {
+            (*it)->Update(time);
+            (*it)->Draw(view, projection);
+        }
+        
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);

@@ -1,10 +1,13 @@
+#ifndef ZZZ_H
+#define ZZZ_H
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace glm;
 
-namespace cc
+namespace zzz
 {
     const vec3 RED(1.0f, 0.0f, 0.0f);
     const vec3 GREEN(0.0f, 1.0f, 0.0f);
@@ -21,3 +24,5 @@ namespace cc
     const vec3 BACK(0.0f, 0.0f, -1.0f);
     const vec3 ONE(1.0f, 1.0f, 1.0f);
 }
+
+#endif

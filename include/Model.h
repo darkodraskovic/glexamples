@@ -10,19 +10,22 @@
 class Model
 {
  public:
-    Model(glm::vec3* vertices, int vLen, unsigned int* indices, int iLen, const Shader& shader);
+    Model(const Shader& shader);
     void Draw(const glm::mat4& uView, const glm::mat4& uProjection);
-    void SetVertices(float* vertices, int vLen);
-    void SetIndices(float* indices, int iLen);
+    void SetVertices(glm::vec3* vertices, int vLen, int numAttrs);
+    void SetIndices(unsigned int* indices, int iLen);
+    void GenerateModel();
+    
     void SetRotation(float angle, const glm::vec3& axis);
     void SetScale(const glm::vec3& scale);
     void SetTranslation(const glm::vec3& translation);
+    virtual void Update(float time);
     
     const Shader& shader_;
     unsigned int VAO_;
-    
  private:
     int vLen_;
+    int numAttrs_;
     int iLen_;
 
     glm::mat4 id_;
@@ -33,6 +36,7 @@ class Model
     
     glm::vec3* vertices_;
     unsigned int* indices_;
+
 };
 
 #endif
