@@ -1,8 +1,12 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include <vector>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include "Model.h"
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -13,7 +17,14 @@ class Application
 public:
     Application();
     int Init();
-    void ProcessInput(GLFWwindow *window);
+    void ProcessInput();
+    void Update();
+    void Render();
+    bool ShouldClose();
+    void Terminate();
+
+    std::vector<Model*> models_;
+    GLFWwindow* window_;
 };
 
 #endif

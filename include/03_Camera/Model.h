@@ -36,7 +36,6 @@ class Model
     
     glm::vec3* vertices_;
     unsigned int* indices_;
-
 };
 
 #endif
