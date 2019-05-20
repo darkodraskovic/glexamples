@@ -11,7 +11,7 @@
 #include "Shader.h"
 
 #include "Model.h"
-#include "src/02_Cube/Cube.cpp"
+#include "src/03_Camera/Cube.cpp"
 
 using namespace std;
 using namespace glm;
@@ -22,6 +22,8 @@ void processInput(GLFWwindow *window);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+unsigned int genModel(float* vertices, int vLen, unsigned int* indices, int iLen, int stride);
 
 int main()
 {
@@ -65,19 +67,9 @@ int main()
     
     Cube cube1(vColShader);
     
-    Cube cube2(vColShader);
-    cube2.SetScale(glm::vec3(0.5, 2.0, 0.5));
-    cube2.SetTranslation(zzz::LEFT + zzz::LEFT);
-
-    Cube cube3(vColShader);
-    cube3.SetScale(glm::vec3(0.3, 0.3, 0.3));
-    cube3.SetTranslation(zzz::RIGHT + zzz::RIGHT);
-
     // model vector
     std::vector<Model*> models;
     models.push_back(&cube1);
-    models.push_back(&cube2);
-    models.push_back(&cube3);
     
     // render loop
     // -----------
