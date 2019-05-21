@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "Shader.h"
 #include "Cube.h"
+#include "zzz.h"
 
 int main()
 {
@@ -23,6 +24,14 @@ int main()
     Cube cube1(vColShader);
     app.models_.push_back(&cube1);
 
+    Cube cube2(vColShader);
+    cube2.Translate(zzz::ONE);
+    app.models_.push_back(&cube2);
+
+    Cube cube3(vColShader);
+    cube3.Translate(zzz::ONE+zzz::ONE);
+    app.models_.push_back(&cube3);
+    
     // Application loop
     // ---------------------------------------------------------------------------
     while (!app.ShouldClose())

@@ -59,5 +59,5 @@ Cube::Cube(const Shader& shader) : Model(shader) {
 };
     
 void Cube::Update(float deltaTime) {
-    Rotate(deltaTime*100, zzz::ONE);
+    // Rotate(deltaTime*100, zzz::ONE);
 }
