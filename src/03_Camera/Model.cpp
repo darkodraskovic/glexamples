@@ -62,9 +62,19 @@ void Model::SetRotation(float angle, const glm::vec3& axis)
     rotation_ = glm::rotate(id_, glm::radians(angle), axis);
 }
 
+void Model::Rotate(float angle, const glm::vec3& axis)
+{
+    rotation_ = glm::rotate(rotation_, glm::radians(angle), axis);
+}
+
 void Model::SetScale(const glm::vec3& scale)
 {
     scale_ = glm::scale(id_, scale);
+}
+
+void Model::Scale(const glm::vec3& scale)
+{
+    scale_ = glm::scale(scale_, scale);
 }
 
 void Model::SetTranslation(const glm::vec3& translation)
@@ -72,7 +82,12 @@ void Model::SetTranslation(const glm::vec3& translation)
     translation_ = glm::translate(id_, translation);
 }
 
-void Model::Update(float time)
+void Model::Translate(const glm::vec3& translation)
+{
+    translation_ = glm::translate(translation_, translation);
+}
+
+void Model::Update(float deltaTime)
 {
 
 };

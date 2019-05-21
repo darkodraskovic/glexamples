@@ -55,8 +55,9 @@ Cube::Cube(const Shader& shader) : Model(shader) {
     SetVertices(vertices, vLen, numAttrs);
     SetIndices(indices, iLen);
     GenerateModel();
+
 };
     
-void Cube::Update(float time) {
-    SetRotation(time*100, zzz::ONE);
+void Cube::Update(float deltaTime) {
+    Rotate(deltaTime*100, zzz::ONE);
 }

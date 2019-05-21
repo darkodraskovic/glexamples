@@ -17,9 +17,13 @@ class Model
     void GenerateModel();
     
     void SetRotation(float angle, const glm::vec3& axis);
+    void Rotate(float angle, const glm::vec3& axis);
     void SetScale(const glm::vec3& scale);
+    void Scale(const glm::vec3& scale);    
     void SetTranslation(const glm::vec3& translation);
-    virtual void Update(float time);
+    void Translate(const glm::vec3& translation);
+    
+    virtual void Update(float deltaTime);
     
     const Shader& shader_;
     unsigned int VAO_;
