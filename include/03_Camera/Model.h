@@ -13,6 +13,7 @@ class Model
     Model(const Shader& shader);
     void Draw(const glm::mat4& uView, const glm::mat4& uProjection);
     void SetVertices(glm::vec3* vertices, int vLen, int numAttrs);
+    void SetVertices(glm::vec4* vertices, int vLen, int numAttrs);
     void SetIndices(unsigned int* indices, int iLen);
     void GenerateModel();
     
@@ -27,10 +28,13 @@ class Model
     
     const Shader& shader_;
     unsigned int VAO_;
+    
  private:
     int vLen_;
     int numAttrs_;
     int iLen_;
+    size_t vAttrSize_;
+    size_t vSize_;
 
     glm::mat4 id_;
     glm::mat4 rotation_;
@@ -38,7 +42,8 @@ class Model
     glm::mat4 translation_;
     glm::mat4 transform_;
     
-    glm::vec3* vertices_;
+    glm::vec3* vertices3_;
+    glm::vec4* vertices4_;
     unsigned int* indices_;
 };
 

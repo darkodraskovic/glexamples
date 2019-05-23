@@ -6,10 +6,22 @@ Model::Model(const Shader& shader) : shader_(shader)
 
 void Model::SetVertices(glm::vec3* vertices, int vLen, int numAttrs)
 {
-    vertices_ = vertices;
+    vertices3_ = vertices;
     vLen_ = vLen;
     numAttrs_ = numAttrs;
+    vAttrSize_ = sizeof(glm::vec3);
+    vSize_ = numAttrs_ * vAttrSize_;
 };
+
+void Model::SetVertices(glm::vec4* vertices, int vLen, int numAttrs)
+{
+    vertices4_ = vertices;
+    vLen_ = vLen;
+    numAttrs_ = numAttrs;
+    vAttrSize_ = sizeof(glm::vec3);
+    vSize_ = numAttrs_ * vAttrSize_;    
+};
+
 void Model::SetIndices(unsigned int* indices, int iLen)
 {
     indices_ = indices;
@@ -18,26 +30,35 @@ void Model::SetIndices(unsigned int* indices, int iLen)
 
 void Model::GenerateModel()
 {
-    int vSize = sizeof(glm::vec3) * numAttrs_;
-
+    // VAO
     glGenVertexArrays(1, &VAO_);
     glBindVertexArray(VAO_);
 
+    // VBO
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vLen_ * vSize, vertices_, GL_STATIC_DRAW);
+    
+    if (vAttrSize_ == sizeof(glm::vec3)) {
+        glBufferData(GL_ARRAY_BUFFER, vLen_ * vSize_, vertices3_, GL_STATIC_DRAW);
+    }
+    else {
+        glBufferData(GL_ARRAY_BUFFER, vLen_ * vSize_, vertices4_, GL_STATIC_DRAW);
+    }
+    
     for (int i = 0; i < numAttrs_; ++i)
     {
-        glVertexAttribPointer(i, 3, GL_FLOAT, GL_FALSE, vSize, (void*)(i*sizeof(glm::vec3)));
+        glVertexAttribPointer(i, 3, GL_FLOAT, GL_FALSE, vSize_, (void*)(i*vAttrSize_));
         glEnableVertexAttribArray(i);
     }
-
+    
+    // EBO
     unsigned int EBO;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, iLen_ * sizeof(unsigned int), indices_, GL_STATIC_DRAW);
 
+    // Transform
     id_ = glm::mat4(1.0f);
     rotation_ = glm::mat4(1.0f);
     scale_ = glm::mat4(1.0f);
