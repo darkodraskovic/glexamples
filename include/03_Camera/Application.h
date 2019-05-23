@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Model.h"
+#include "Camera.h"
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -25,6 +26,10 @@ public:
 
     std::vector<Model*> models_;
     GLFWwindow* window_;
+    Camera camera_;
+
+    float deltaTime_ = 0.0f;	// Time between current frame and last frame
+    float lastFrame_ = 0.0f; // Time of last frame
 };
 
 #endif

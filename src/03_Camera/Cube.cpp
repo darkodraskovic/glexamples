@@ -15,7 +15,7 @@ Cube::Cube(const Shader& shader) : Model(shader) {
 
     vec3 vertices[] = {
         // front
-        frontBL, zzz::RED, frontBR, zzz::GREEN, frontTR, zzz::BLUE, frontTL, zzz::MAGENTA,
+        frontBL, zzz::RED, frontBR, zzz::RED, frontTR, zzz::BLUE, frontTL, zzz::MAGENTA,
         // back
         backBR, zzz::RED, backBL, zzz::GREEN, backTL, zzz::BLUE, backTR, zzz::MAGENTA,
         // left

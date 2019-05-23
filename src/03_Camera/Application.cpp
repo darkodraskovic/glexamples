@@ -1,23 +1,20 @@
 #include <iostream>
 
 #include <glm/glm.hpp>
-// #include <glm/gtc/matrix_transform.hpp>
-// #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Application.h"
+#include "Camera.h"
 
 using namespace glm;
 
-vec3 cameraPos = vec3(0.0f, 0.0f, 3.0f);
-vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
-vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
-
-float deltaTime = 0.0f;	// Time between current frame and last frame
-float lastFrame = 0.0f; // Time of last frame
-
-float lastX = SCR_WIDTH/2, lastY = SCR_HEIGHT/2;
-float cameraYaw = 0, cameraPitch = 0, cameraFov = 45.0f;
-bool firstMouse = false;
+float lastMouseX = SCR_WIDTH/2, lastMouseY = SCR_HEIGHT/2;
+float mouseOffsetX, mouseOffsetY;
+float mouseScrollY;
+bool firstMouse = true;
+bool processMouseMovement = false;
+bool processMouseScroll = false;
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 void MouseCallback(GLFWwindow* window, double posX, double posY);
@@ -63,7 +60,7 @@ int Application::Init()
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
-
+    
     return 0;
 };
 
@@ -73,34 +70,40 @@ void Application::ProcessInput(float deltaTime)
     if(glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window_, true);
 
-    float cameraSpeed = deltaTime * 10;
     if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS)
-        cameraPos += cameraSpeed * cameraFront;
+        camera_.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS)
-        cameraPos -= cameraSpeed * cameraFront;
-    if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS)
-        cameraPos -= cameraSpeed * cameraUp;
-    if (glfwGetKey(window_, GLFW_KEY_E) == GLFW_PRESS)
-        cameraPos += cameraSpeed * cameraUp;    
+        camera_.ProcessKeyboard(BACKWARD, deltaTime);
     if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS)
-        cameraPos += cameraSpeed * normalize(cross(cameraUp, cameraFront));
+        camera_.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS)
-        cameraPos -= cameraSpeed * normalize(cross(cameraUp, cameraFront));
+        camera_.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window_, GLFW_KEY_E) == GLFW_PRESS)
+        camera_.ProcessKeyboard(UP, deltaTime);
+    if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS)
+        camera_.ProcessKeyboard(DOWN, deltaTime);
+
+    if (processMouseMovement) {
+        camera_.ProcessMouseMovement(mouseOffsetX, mouseOffsetY);    
+        processMouseMovement = false;
+    }
+
+    if (processMouseScroll) {
+        camera_.ProcessMouseScroll(mouseScrollY);
+        processMouseScroll = false;
+    }
+    
 }
+
+float cameraYaw = -90, cameraPitch = 0, cameraFov = 45.0f;
 
 void Application::Render(float deltaTime)
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    mat4 view = mat4(1.0f);
-    cameraFront.x = cos(radians(cameraYaw)) * cos(radians(cameraPitch));
-    cameraFront.y = sin(radians(cameraPitch));
-    cameraFront.z = sin(radians(cameraYaw)) * cos(radians(cameraPitch));
-    view = lookAt(cameraPos, cameraPos + normalize(cameraFront), cameraUp);
-    
-    mat4 projection;
-    projection = perspective(radians(cameraFov), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 view = camera_.GetViewMatrix();
+    glm::mat4 projection = camera_.GetProjectionMatrix(SCR_WIDTH, SCR_HEIGHT);
 
     for(std::vector<Model*>::iterator it = models_.begin(); it != models_.end(); ++it) {
         (*it)->Update(deltaTime);
@@ -116,11 +119,11 @@ void Application::Render(float deltaTime)
 void Application::Update()
 {
     float currentFrame = glfwGetTime();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
+    deltaTime_ = currentFrame - lastFrame_;
+    lastFrame_ = currentFrame;
     
-    ProcessInput(deltaTime);
-    Render(deltaTime);
+    ProcessInput(deltaTime_);
+    Render(deltaTime_);
 };
 
 bool Application::ShouldClose()
@@ -144,27 +147,21 @@ void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 void MouseCallback(GLFWwindow* window, double posX, double posY)
 {
     if (firstMouse) {
-        lastX = posX;
-        lastY = posY;
+        lastMouseX = posX;
+        lastMouseY = posY;
+        firstMouse = false;
     }
 
-    float offsetX = posX - lastX;
-    float offsetY = posY - lastY;
-    lastX = posX;
-    lastY = posY;
+    mouseOffsetX = posX - lastMouseX;
+    mouseOffsetY = posY - lastMouseY;
+    lastMouseX = posX;
+    lastMouseY = posY;
 
-    float sensitivity = 0.05;
-    offsetX *= sensitivity;
-    offsetY *= sensitivity;
-
-    cameraYaw  += offsetX;
-    cameraPitch -= offsetY;
-
-    cameraPitch = glm::clamp(cameraPitch, -89.0f, 89.0f);
+    processMouseMovement = true;    
 };
 
 void ScrollCallback(GLFWwindow* window, double offsetX, double offsetY)
 {
-    cameraFov -= offsetY * 2;
-    cameraFov = clamp(cameraFov, 1.0f, 45.0f);
+    mouseScrollY = offsetY;
+    processMouseScroll = true;
 }
