@@ -25,12 +25,14 @@ int main()
     app.models_.push_back(&cube1);
 
     Cube cube2(vColShader);
-    cube2.Translate(zzz::ONE);
+    cube2.Translate(-zzz::ONE);
     app.models_.push_back(&cube2);
 
     Cube cube3(vColShader);
-    cube3.Translate(zzz::ONE+zzz::ONE);
+    cube3.Translate(zzz::ONE);
     app.models_.push_back(&cube3);
+
+    app.camera_.position_.z = 7.0f;
     
     // Application loop
     // ---------------------------------------------------------------------------

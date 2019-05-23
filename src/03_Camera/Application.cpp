@@ -7,14 +7,18 @@
 #include "Application.h"
 #include "Camera.h"
 
-using namespace glm;
+namespace mouseData
+{
+    float lastMouseX = SCR_WIDTH/2, lastMouseY = SCR_HEIGHT/2;
+    float mouseOffsetX, mouseOffsetY;
+    float mouseScrollY;
+    bool firstMouse = true;
+    bool processMouseMovement = false;
+    bool processMouseScroll = false;
+}
 
-float lastMouseX = SCR_WIDTH/2, lastMouseY = SCR_HEIGHT/2;
-float mouseOffsetX, mouseOffsetY;
-float mouseScrollY;
-bool firstMouse = true;
-bool processMouseMovement = false;
-bool processMouseScroll = false;
+using namespace glm;
+using namespace mouseData;
 
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 void MouseCallback(GLFWwindow* window, double posX, double posY);
@@ -92,7 +96,6 @@ void Application::ProcessInput(float deltaTime)
         camera_.ProcessMouseScroll(mouseScrollY);
         processMouseScroll = false;
     }
-    
 }
 
 float cameraYaw = -90, cameraPitch = 0, cameraFov = 45.0f;
