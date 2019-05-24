@@ -27,3 +27,9 @@ file(GLOB CAMERA_SOURCES ${GENERIC_SOURCES} "src/03_Camera/*.c" "src/03_Camera/*
 add_executable(camera 03_Camera.cpp ${CAMERA_SOURCES})
 target_include_directories(camera PUBLIC "include/03_Camera")
 target_link_libraries(camera GL GLU glfw dl)
+
+#lighting
+file(GLOB LIGHTING_SOURCES ${GENERIC_SOURCES} "src/04_Lighting/*.c" "src/04_Lighting/*.cpp")
+add_executable(lighting 04_Lighting.cpp ${LIGHTING_SOURCES})
+target_include_directories(lighting PUBLIC "include/04_Lighting")
+target_link_libraries(lighting GL GLU glfw dl)

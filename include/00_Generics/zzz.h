@@ -9,6 +9,8 @@ using namespace glm;
 
 namespace zzz
 {
+    const vec3 BLACK(0.0f, 0.0f, 0.0f);
+    const vec3 WHITE(1.0f, 1.0f, 1.0f);
     const vec3 RED(1.0f, 0.0f, 0.0f);
     const vec3 GREEN(0.0f, 1.0f, 0.0f);
     const vec3 BLUE(0.0f, 0.0f, 1.0f);
