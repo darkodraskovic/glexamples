@@ -2,11 +2,7 @@
 
 using namespace glm;
 
-Cube::Cube(const glm::vec3& diffuseColor) :
-    diffuseColor_(diffuseColor)
-{
-    
-};
+Cube::Cube() {};
 
 void Cube::GenerateModel()
 {
@@ -62,8 +58,13 @@ void Cube::GenerateModel()
     SetIndices(indices, iLen);
     Model::GenerateModel();
 }
-    
+
 void Cube::Update(float deltaTime) {
-    shader_->setVec3("uDiffuseColor", diffuseColor_);
-    Rotate(deltaTime*100, zzz::ONE);
+    shader_->use();
+    shader_->setVec3("uMaterial.ambient",  material_->ambient);
+    shader_->setVec3("uMaterial.diffuse",  material_->diffuse);
+    shader_->setVec3("uMaterial.specular", material_->specular);
+    shader_->setFloat("uMaterial.shininess", material_->shininess);
+    
+    Rotate(deltaTime*25, zzz::ONE);
 }

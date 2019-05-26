@@ -20,36 +20,51 @@ int main()
     // Application CONTENT
     // ---------------------------------------------------------------------------
     
-    Shader* litDiffShader = new Shader ( "../shaders/LitDiff.vs", "../shaders/LitDiff.fs");
+    Shader* litSolidShader = new Shader ( "../shaders/LitSolid.vs", "../shaders/LitSolid.fs");
     
     Cube* cube1 = new Cube();
-    cube1->shader_ = litDiffShader;
-    cube1->diffuseColor_ = zzz::RED;
+    cube1->shader_ = litSolidShader;
     cube1->GenerateModel();
+    zzz::Material* mat1 = new zzz::Material();
+    mat1->diffuse = zzz::RED;
+    cube1->material_ = mat1;
     app.models_.push_back(cube1);
 
     Cube* cube2 = new Cube();
     cube2->Clone(cube1);
-    cube2->diffuseColor_ = zzz::GREEN;
+    zzz::Material* mat2 = new zzz::Material();
+    mat2->shininess = 512;
+    mat2->diffuse = zzz::GREEN;
+    cube2->material_ = mat2;    
     cube2->Translate(-zzz::ONE);
     app.models_.push_back(cube2);
 
     Cube* cube3 = new Cube();
-    cube3->Clone(cube2);
-    cube3->diffuseColor_ = zzz::BLUE;
+    cube3->Clone(cube1);
+    zzz::Material* mat3 = new zzz::Material();
+    mat3->shininess = 128;
+    mat3->diffuse = zzz::BLUE;
+    cube3->material_ = mat3;    
     cube3->Translate(zzz::ONE);
     app.models_.push_back(cube3);
     
-    app.camera_.position_.z = 7.0f;
+    app.camera_.position_.z = 7.0f;    
+
+    // Light
+    litSolidShader->use();
+    litSolidShader->setVec3("uLight.ambient",  0.2f, 0.2f, 0.2f);
+    litSolidShader->setVec3("uLight.diffuse",  0.5f, 0.5f, 0.5f);
+    litSolidShader->setVec3("uLight.specular", 1.0f, 1.0f, 1.0f);
+    litSolidShader->setVec3("uLight.position", 2.0f, 1.0f, 9.0f);
     
     // Application loop
     // ---------------------------------------------------------------------------
     while (!app.ShouldClose())
     {
-        litDiffShader->setVec3("uLightColor", zzz::WHITE);
-        litDiffShader->setVec3("uAmbientColor", zzz::BLACK);
-        litDiffShader->setVec3("uLightDirection", vec3(0.30, 1.0, 0.70));
-        
+
+        litSolidShader->use();
+        litSolidShader->setVec3("uViewPos", app.camera_.position_);
+                
         app.Update();
     }
 

@@ -7,11 +7,11 @@
 class Cube : public Model
 {
 public:
-    Cube(const glm::vec3& diffuseColor = zzz::WHITE);
+    Cube();
     virtual void GenerateModel() override;
     virtual void Update(float time) override;
 
-    glm::vec3 diffuseColor_;
+    zzz::Material* material_;
 };
 
 #endif
