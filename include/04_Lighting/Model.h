@@ -10,12 +10,14 @@
 class Model
 {
  public:
-    Model(const Shader& shader);
+    Model();
+    Model* Clone(Model* model);
     void Draw(const glm::mat4& uView, const glm::mat4& uProjection);
     void SetVertices(glm::vec3* vertices, int vLen, int numAttrs);
     void SetVertices(glm::vec4* vertices, int vLen, int numAttrs);
     void SetIndices(unsigned int* indices, int iLen);
-    void GenerateModel();
+    virtual void GenerateModel();
+    void InitTransform();
     
     void SetRotation(float angle, const glm::vec3& axis);
     void Rotate(float angle, const glm::vec3& axis);
@@ -26,7 +28,7 @@ class Model
     
     virtual void Update(float deltaTime);
     
-    const Shader& shader_;
+    Shader* shader_;
     unsigned int VAO_;
     
  private:

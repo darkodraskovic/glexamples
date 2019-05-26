@@ -1,10 +1,14 @@
 #include "Cube.h"
-#include "zzz.h"
 
 using namespace glm;
 
-Cube::Cube(const Shader& shader, const glm::vec3& diffuseColor) :
-    Model(shader), diffuseColor_(diffuseColor)
+Cube::Cube(const glm::vec3& diffuseColor) :
+    diffuseColor_(diffuseColor)
+{
+    
+};
+
+void Cube::GenerateModel()
 {
     vec3 frontBL(-0.5f, -0.5f, 0.5f);
     vec3 frontTL(-0.5f, 0.5f, 0.5f);
@@ -56,11 +60,10 @@ Cube::Cube(const Shader& shader, const glm::vec3& diffuseColor) :
 
     SetVertices(vertices, vLen, numAttrs);
     SetIndices(indices, iLen);
-    GenerateModel();
-
-};
+    Model::GenerateModel();
+}
     
 void Cube::Update(float deltaTime) {
-    shader_.setVec3("uDiffuseColor", diffuseColor_);
+    shader_->setVec3("uDiffuseColor", diffuseColor_);
     Rotate(deltaTime*100, zzz::ONE);
 }

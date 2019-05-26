@@ -1,7 +1,6 @@
 #include "Model.h"
-#include "zzz.h"
 
-Model::Model(const Shader& shader) : shader_(shader)
+Model::Model()
 {
 };
 
@@ -60,20 +59,43 @@ void Model::GenerateModel()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, iLen_ * sizeof(unsigned int), indices_, GL_STATIC_DRAW);
 
     // Transform
+    InitTransform();
+}
+
+void Model::InitTransform()
+{
     id_ = glm::mat4(1.0f);
     rotation_ = glm::mat4(1.0f);
     scale_ = glm::mat4(1.0f);
     translation_ = glm::mat4(1.0f);
     transform_ = glm::mat4(1.0f);
-}
+};
+
+Model* Model::Clone(Model* model)
+{
+    // VBO, EBO, VAO
+    if (model->vertices3_) {
+        SetVertices(model->vertices3_, model->vLen_, model->numAttrs_);
+    } else {
+        SetVertices(model->vertices4_, model->vLen_, model->numAttrs_);
+    }
+    SetIndices(model->indices_, model->iLen_);
+    VAO_ = model->VAO_;
+    // Shader
+    shader_ = model->shader_;
+    // Transform
+    InitTransform();
+    
+    return model;
+};
 
 void Model::Draw(const glm::mat4& uView, const glm::mat4& uProjection)
 {
-    shader_.use();
+    shader_->use();
 
-    shader_.setMat4("uModel", translation_* rotation_ * scale_);
-    shader_.setMat4("uView", uView);
-    shader_.setMat4("uProjection", uProjection);
+    shader_->setMat4("uModel", translation_* rotation_ * scale_);
+    shader_->setMat4("uView", uView);
+    shader_->setMat4("uProjection", uProjection);
 
     glBindVertexArray(VAO_);
     glDrawElements(GL_TRIANGLES, iLen_, GL_UNSIGNED_INT, 0);
