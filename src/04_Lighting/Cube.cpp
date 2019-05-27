@@ -66,5 +66,5 @@ void Cube::Update(float deltaTime) {
     shader_->setVec3("uMaterial.specular", material_->specular);
     shader_->setFloat("uMaterial.shininess", material_->shininess);
     
-    Rotate(deltaTime*25, zzz::ONE);
+    Rotate(deltaTime*50, zzz::ONE);
 }

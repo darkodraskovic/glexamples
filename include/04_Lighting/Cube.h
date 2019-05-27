@@ -11,7 +11,7 @@ public:
     virtual void GenerateModel() override;
     virtual void Update(float time) override;
 
-    zzz::Material* material_;
+    zzz::PhongMaterial* material_;
 };
 
 #endif

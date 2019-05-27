@@ -22,7 +22,9 @@ class Model
     void SetRotation(float angle, const glm::vec3& axis);
     void Rotate(float angle, const glm::vec3& axis);
     void SetScale(const glm::vec3& scale);
-    void Scale(const glm::vec3& scale);    
+    void SetScale(float scale);
+    void Scale(const glm::vec3& scale);
+    void Scale(float scale);    
     void SetTranslation(const glm::vec3& translation);
     void Translate(const glm::vec3& translation);
     

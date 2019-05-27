@@ -116,9 +116,19 @@ void Model::SetScale(const glm::vec3& scale)
     scale_ = glm::scale(id_, scale);
 }
 
+void Model::SetScale(float scale)
+{
+    scale_ = glm::scale(id_, glm::vec3(scale));
+}
+
 void Model::Scale(const glm::vec3& scale)
 {
     scale_ = glm::scale(scale_, scale);
+}
+
+void Model::Scale(float scale)
+{
+    scale_ = glm::scale(scale_, glm::vec3(scale));
 }
 
 void Model::SetTranslation(const glm::vec3& translation)

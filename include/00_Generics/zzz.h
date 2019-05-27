@@ -30,9 +30,9 @@ namespace zzz
     const vec3 BACK(0.0f, 0.0f, -1.0f);
     const vec3 ONE(1.0f, 1.0f, 1.0f);
 
-    struct Material
+    struct PhongMaterial
     {
-    Material() : ambient(DARK_GRAY), diffuse(WHITE), specular(GRAY), shininess(32) {}
+    PhongMaterial() : ambient(DARK_GRAY), diffuse(WHITE), specular(GRAY), shininess(32) {}
         vec3 ambient;
         vec3 diffuse;
         vec3 specular;
