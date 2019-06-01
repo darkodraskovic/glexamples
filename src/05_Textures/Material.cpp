@@ -41,9 +41,12 @@ void Material::Update(float deltaTime, const glm::mat4& model, const glm::mat4& 
         glBindTexture(GL_TEXTURE_2D, phongMap_->diffuse);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, phongMap_->specular);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, phongMap_->emissive);
 
         shader_->setInt("uMaterial.diffuse", 0);
         shader_->setInt("uMaterial.specular", 1);
+        shader_->setInt("uMaterial.emissive", 2);
         shader_->setFloat("uMaterial.shininess", phongMap_->shininess);
     }
 }

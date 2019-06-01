@@ -21,11 +21,15 @@ int main()
     // Application CONTENT
     // ---------------------------------------------------------------------------
 
-    unsigned int diffuseMap = app.resourceManager_->LoadTexture("../assets/bricks_diffuse.jpg");
-    unsigned int specularMap = app.resourceManager_->LoadTexture("../assets/bricks_specular.jpg");
+    // unsigned int diffuseMap = app.resourceManager_->LoadTexture("../assets/bricks_diffuse.jpg");
+    // unsigned int specularMap = app.resourceManager_->LoadTexture("../assets/bricks_specular.jpg");
+    // unsigned int emissiveMap = app.resourceManager_->LoadTexture("../assets/bricks_emissive_green.png");
+    unsigned int diffuseMap = app.resourceManager_->LoadTexture("../assets/metal_diffuse.jpg");
+    unsigned int specularMap = app.resourceManager_->LoadTexture("../assets/metal_specular.jpg");
+    unsigned int emissiveMap = app.resourceManager_->LoadTexture("../assets/metal_emissive_red.png");
     
     Shader* litSolidShader = new Shader ( "../shaders/LitSolid.vs", "../shaders/LitSolid.fs");
-    Shader* litSolidTexturedShader = new Shader ( "../shaders/LitSolidTextures.vs", "../shaders/LitSolidTextures.fs");
+    Shader* litSolidTexturedShader = new Shader ( "../shaders/LitSolidTextured.vs", "../shaders/LitSolidTextured.fs");
 
     Cube* cube1 = new Cube();
     cube1->material_ = new Material(litSolidShader, "Phong");
@@ -50,6 +54,7 @@ int main()
     cube3->material_ = new Material(litSolidTexturedShader, "PhongMap");
     cube3->material_->phongMap_->diffuse = diffuseMap;
     cube3->material_->phongMap_->specular = specularMap;
+    cube3->material_->phongMap_->emissive = emissiveMap;
     cube3->material_->phongMap_->shininess = 16.0f;
     // cube3->Translate(zzz::ONE);
     cube3->SetScale(2);
@@ -65,7 +70,7 @@ int main()
     litSolidShader->setVec3("uLight.position", 0.5f, 0.0f, 5.0f);
 
     litSolidTexturedShader->use();
-    litSolidTexturedShader->setVec3("uLight.ambient",  0.2f, 0.2f, 0.2f);
+    litSolidTexturedShader->setVec3("uLight.ambient",  zzz::GRAY);
     litSolidTexturedShader->setVec3("uLight.diffuse",  0.5f, 0.5f, 0.5f);
     litSolidTexturedShader->setVec3("uLight.specular", zzz::GRAY);
     litSolidTexturedShader->setVec3("uLight.position", 0.5f, 0.0f, 5.0f);
@@ -80,14 +85,14 @@ int main()
         litSolidTexturedShader->use();
         litSolidTexturedShader->setVec3("uViewPos", app.camera_.position_);
         
-        float time = glfwGetTime();
-        float sinVal = glm::sin(time);
-        float cosVal = glm::cos(time);
-        vec3 col = vec3(cosVal, 0.0f, sinVal);
-        litSolidShader->use();
-        litSolidShader->setVec3("uLight.position", col*5.0f);
-        litSolidTexturedShader->use();
-        litSolidTexturedShader->setVec3("uLight.position", col*5.0f);
+        // float time = glfwGetTime();
+        // float sinVal = glm::sin(time);
+        // float cosVal = glm::cos(time);
+        // vec3 col = vec3(cosVal, 0.0f, sinVal);
+        // litSolidShader->use();
+        // litSolidShader->setVec3("uLight.position", col*5.0f);
+        // litSolidTexturedShader->use();
+        // litSolidTexturedShader->setVec3("uLight.position", col*5.0f);
         
         app.Update();
     }

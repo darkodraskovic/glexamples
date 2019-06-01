@@ -28,6 +28,7 @@ namespace material
     PhongMap() : diffuse(0), specular(0), shininess(32.0f) {}
         unsigned int diffuse;
         unsigned int specular;
+        unsigned int emissive;
     
         float shininess;
     };

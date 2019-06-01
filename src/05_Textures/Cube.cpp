@@ -78,5 +78,5 @@ void Cube::GenerateModel()
 }
 
 void Cube::Update(float deltaTime) {    
-    // Rotate(deltaTime*50, zzz::ONE);
+    Rotate(deltaTime*50, zzz::ONE);
 }
