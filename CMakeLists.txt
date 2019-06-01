@@ -33,3 +33,9 @@ file(GLOB LIGHTING_SOURCES ${GENERIC_SOURCES} "src/04_Lighting/*.c" "src/04_Ligh
 add_executable(lighting 04_Lighting.cpp ${LIGHTING_SOURCES})
 target_include_directories(lighting PUBLIC "include/04_Lighting")
 target_link_libraries(lighting GL GLU glfw dl)
+
+#lighting
+file(GLOB TEXTURES_SOURCES ${GENERIC_SOURCES} "src/05_Textures/*.c" "src/05_Textures/*.cpp")
+add_executable(textures 05_Textures.cpp ${TEXTURES_SOURCES})
+target_include_directories(textures PUBLIC "include/05_Textures")
+target_link_libraries(textures GL GLU glfw dl)
