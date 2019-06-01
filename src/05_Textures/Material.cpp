@@ -14,6 +14,7 @@ Material::Material(Shader* shader)
 Material::Material(Shader* shader, const std::string& type)
 {
     shader_ = shader;
+
     if (type == "Phong") {
         phong_ = new material::Phong();
     }
@@ -50,4 +51,3 @@ void Material::Update(float deltaTime, const glm::mat4& model, const glm::mat4& 
         shader_->setFloat("uMaterial.shininess", phongMap_->shininess);
     }
 }
-

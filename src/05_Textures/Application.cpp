@@ -112,7 +112,7 @@ void Application::Render(float deltaTime)
 
     for(std::vector<Model*>::iterator it = models_.begin(); it != models_.end(); ++it) {
         (*it)->Update(deltaTime);
-        (*it)->Draw(deltaTime, view, projection);
+        (*it)->Render(deltaTime, view, projection);
     }
         
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -142,6 +142,10 @@ bool Application::ShouldClose()
 };
 void Application::Terminate()
 {
+    for(std::vector<Model*>::iterator it = models_.begin(); it != models_.end(); ++it) {
+        delete (*it);
+    }
+
     glfwTerminate();
 };
 

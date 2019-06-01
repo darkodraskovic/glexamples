@@ -11,11 +11,12 @@ class Model
 {
  public:
     Model();
+    ~Model();
     Model* Clone(Model* model);
-    void Draw(float deltaTime, const glm::mat4& uView, const glm::mat4& uProjection);
-    void SetVertices(glm::vec3* vertices, int vLen, int numAttrs);
-    void SetVertices(glm::vec4* vertices, int vLen, int numAttrs);
-    void SetIndices(unsigned int* indices, int iLen);
+    void Render(float deltaTime, const glm::mat4& uView, const glm::mat4& uProjection);
+    void SetVertices(glm::vec3* vertices, int numVerts, int numAttrs);
+    void SetVertices(glm::vec4* vertices, int numVerts, int numAttrs);
+    void SetIndices(unsigned int* indices, int numIdx);
     virtual void GenerateModel();
     void InitTransform();
     
@@ -32,13 +33,14 @@ class Model
     
     Material* material_;
     unsigned int VAO_;
+    unsigned int VBO_;
     
  private:
-    int vLen_;
+    int numVerts_;
     int numAttrs_;
-    int iLen_;
-    size_t vAttrSize_;
-    size_t vSize_;
+    int numIdx_;
+    size_t attrSize_;
+    size_t vertSize_;
 
     glm::mat4 id_;
     glm::mat4 rotation_;
@@ -46,8 +48,8 @@ class Model
     glm::mat4 translation_;
     glm::mat4 transform_;
     
-    glm::vec3* vertices3_;
-    glm::vec4* vertices4_;
+    glm::vec3* vertices3_ { nullptr };
+    glm::vec4* vertices4_ { nullptr };
     unsigned int* indices_;
 };
 

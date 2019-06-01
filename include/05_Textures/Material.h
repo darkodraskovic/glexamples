@@ -25,7 +25,7 @@ namespace material
 
     struct PhongMap
     {
-    PhongMap() : diffuse(0), specular(0), shininess(32.0f) {}
+    PhongMap() : diffuse(0), specular(0), emissive(0), shininess(32.0f) {}
         unsigned int diffuse;
         unsigned int specular;
         unsigned int emissive;
@@ -45,8 +45,8 @@ public:
     virtual void Update(float deltaTime, const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection);
 
     Shader* shader_;
-    Phong* phong_;
-    PhongMap* phongMap_;
+    Phong* phong_ { nullptr };
+    PhongMap* phongMap_ { nullptr };
 };
 
 #endif

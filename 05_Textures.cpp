@@ -21,46 +21,57 @@ int main()
     // Application CONTENT
     // ---------------------------------------------------------------------------
 
-    // unsigned int diffuseMap = app.resourceManager_->LoadTexture("../assets/bricks_diffuse.jpg");
-    // unsigned int specularMap = app.resourceManager_->LoadTexture("../assets/bricks_specular.jpg");
-    // unsigned int emissiveMap = app.resourceManager_->LoadTexture("../assets/bricks_emissive_green.png");
-    unsigned int diffuseMap = app.resourceManager_->LoadTexture("../assets/metal_diffuse.jpg");
-    unsigned int specularMap = app.resourceManager_->LoadTexture("../assets/metal_specular.jpg");
-    unsigned int emissiveMap = app.resourceManager_->LoadTexture("../assets/metal_emissive_red.png");
+    unsigned int diffuseBricks = app.resourceManager_->LoadTexture("../assets/bricks_diffuse.jpg");
+    unsigned int specularBricks = app.resourceManager_->LoadTexture("../assets/bricks_specular.jpg");
+    unsigned int emissiveBricks = app.resourceManager_->LoadTexture("../assets/bricks_emissive_green.png");
+    unsigned int diffuseMetal = app.resourceManager_->LoadTexture("../assets/metal_diffuse.jpg");
+    unsigned int specularMetal = app.resourceManager_->LoadTexture("../assets/metal_specular.jpg");
+    unsigned int emissiveMetal = app.resourceManager_->LoadTexture("../assets/metal_emissive_red.png");
     
     Shader* litSolidShader = new Shader ( "../shaders/LitSolid.vs", "../shaders/LitSolid.fs");
     Shader* litSolidTexturedShader = new Shader ( "../shaders/LitSolidTextured.vs", "../shaders/LitSolidTextured.fs");
 
-    Cube* cube1 = new Cube();
-    cube1->material_ = new Material(litSolidShader, "Phong");
-    cube1->GenerateModel();
-    cube1->material_->phong_->diffuse = zzz::RED;
-    cube1->material_->phong_->shininess = 512;
-    cube1->Translate(zzz::ONE);
-    app.models_.push_back(cube1);
+    // Cube* cube1 = new Cube();
+    // cube1->material_ = new Material(litSolidShader, "Phong");
+    // cube1->GenerateModel();
+    // cube1->material_->phong_->diffuse = zzz::RED;
+    // cube1->material_->phong_->shininess = 512;
+    // cube1->Translate(zzz::ONE);
+    // app.models_.push_back(cube1);
 
     Cube* cube2 = new Cube();
-    cube2->Clone(cube1);
-    cube2->material_ = new Material(litSolidShader, "Phong");
-    cube2->material_->phong_->diffuse = zzz::GREEN;
-    cube2->material_->phong_->ambient = zzz::GRAY;
-    cube2->Translate(-zzz::ONE*2.0f);
-    cube2->Scale(2);
+    cube2->GenerateModel();
+    cube2->material_ = new Material(litSolidTexturedShader, "PhongMap");
+    cube2->material_->phongMap_->diffuse = diffuseMetal;
+    cube2->material_->phongMap_->specular = specularMetal;
+    cube2->material_->phongMap_->emissive = emissiveMetal;
+    cube2->material_->phongMap_->shininess = 1024.0f;
+    cube2->SetScale(2);
     app.models_.push_back(cube2);
 
     Cube* cube3 = new Cube();
-    // cube3->Clone(cube2);
-    cube3->GenerateModel();
+    cube3->Clone(cube2);
     cube3->material_ = new Material(litSolidTexturedShader, "PhongMap");
-    cube3->material_->phongMap_->diffuse = diffuseMap;
-    cube3->material_->phongMap_->specular = specularMap;
-    cube3->material_->phongMap_->emissive = emissiveMap;
-    cube3->material_->phongMap_->shininess = 16.0f;
-    // cube3->Translate(zzz::ONE);
-    cube3->SetScale(2);
+    cube3->material_->phongMap_->diffuse = diffuseMetal;
+    cube3->material_->phongMap_->specular = specularMetal;
+    cube3->material_->phongMap_->emissive = emissiveMetal;
+    cube3->material_->phongMap_->shininess = 256.0f;
+    cube3->Translate(-zzz::ONE*2.0f);
+    cube3->Scale(2);
     app.models_.push_back(cube3);
     
-    app.camera_.position_.z = 7.0f;
+    Cube* cube4 = new Cube();
+    cube4->Clone(cube2);
+    cube4->material_ = new Material(litSolidTexturedShader, "PhongMap");
+    cube4->material_->phongMap_->diffuse = diffuseBricks;
+    cube4->material_->phongMap_->specular = specularBricks;
+    cube4->material_->phongMap_->emissive = emissiveBricks;
+    cube4->material_->phongMap_->shininess = 64.0f;
+    cube4->Translate(zzz::ONE*2.0f);
+    cube4->Scale(2);
+    app.models_.push_back(cube4);
+    
+    app.camera_.position_.z = 12.0f;
 
     // Light
     litSolidShader->use();
@@ -70,8 +81,8 @@ int main()
     litSolidShader->setVec3("uLight.position", 0.5f, 0.0f, 5.0f);
 
     litSolidTexturedShader->use();
-    litSolidTexturedShader->setVec3("uLight.ambient",  zzz::GRAY);
-    litSolidTexturedShader->setVec3("uLight.diffuse",  0.5f, 0.5f, 0.5f);
+    litSolidTexturedShader->setVec3("uLight.ambient",  zzz::DARK_GRAY);
+    litSolidTexturedShader->setVec3("uLight.diffuse",  zzz::GRAY);
     litSolidTexturedShader->setVec3("uLight.specular", zzz::GRAY);
     litSolidTexturedShader->setVec3("uLight.position", 0.5f, 0.0f, 5.0f);
     

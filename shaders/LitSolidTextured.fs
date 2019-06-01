@@ -48,5 +48,6 @@ void main()
     vec3 emissive = texture(uMaterial.emissive, TexCoords).rgb;
     
     vec3 result = ambient + diffuse + specular + emissive;
+    // vec3 result = ambient + diffuse + emissive;
     FragCol = vec4(result, 1.0);
 }
