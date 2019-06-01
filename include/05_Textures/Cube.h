@@ -10,8 +10,6 @@ public:
     Cube();
     virtual void GenerateModel() override;
     virtual void Update(float time) override;
-
-    zzz::PhongMaterial* material_;
 };
 
 #endif

@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 // Options for camera movement. An abstraction to stay away from window-system specific input methods
-enum CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
+enum CameraMovement { CAM_FORWARD, CAM_BACKWARD, CAM_LEFT, CAM_RIGHT, CAM_UP, CAM_DOWN };
 
 // Default camera values
 namespace cameraDefaults
@@ -91,17 +91,17 @@ public:
     void ProcessKeyboard(CameraMovement direction, float deltaTime)
         {
             float velocity = movementSpeed_ * deltaTime;
-            if (direction == FORWARD)
+            if (direction == CAM_FORWARD)
                 position_ += front_ * velocity;
-            if (direction == BACKWARD)
+            if (direction == CAM_BACKWARD)
                 position_ -= front_ * velocity;
-            if (direction == LEFT)
+            if (direction == CAM_LEFT)
                 position_ -= right_ * velocity;
-            if (direction == RIGHT)
+            if (direction == CAM_RIGHT)
                 position_ += right_ * velocity;
-            if (direction == UP)
+            if (direction == CAM_UP)
                 position_ += up_ * velocity;
-            if (direction == DOWN)
+            if (direction == CAM_DOWN)
                 position_ -= up_ * velocity;
         }
 

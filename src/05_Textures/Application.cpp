@@ -75,19 +75,19 @@ void Application::ProcessInput(float deltaTime)
 {
     if(glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window_, true);
-
+    
     if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS)
-        camera_.ProcessKeyboard(FORWARD, deltaTime);
+        camera_.ProcessKeyboard(CAM_FORWARD, deltaTime);
     if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS)
-        camera_.ProcessKeyboard(BACKWARD, deltaTime);
+        camera_.ProcessKeyboard(CAM_BACKWARD, deltaTime);
     if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS)
-        camera_.ProcessKeyboard(LEFT, deltaTime);
+        camera_.ProcessKeyboard(CAM_LEFT, deltaTime);
     if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS)
-        camera_.ProcessKeyboard(RIGHT, deltaTime);
+        camera_.ProcessKeyboard(CAM_RIGHT, deltaTime);
     if (glfwGetKey(window_, GLFW_KEY_E) == GLFW_PRESS)
-        camera_.ProcessKeyboard(UP, deltaTime);
+        camera_.ProcessKeyboard(CAM_UP, deltaTime);
     if (glfwGetKey(window_, GLFW_KEY_Q) == GLFW_PRESS)
-        camera_.ProcessKeyboard(DOWN, deltaTime);
+        camera_.ProcessKeyboard(CAM_DOWN, deltaTime);
 
     if (processMouseMovement) {
         camera_.ProcessMouseMovement(mouseOffsetX, mouseOffsetY);    
@@ -112,7 +112,7 @@ void Application::Render(float deltaTime)
 
     for(std::vector<Model*>::iterator it = models_.begin(); it != models_.end(); ++it) {
         (*it)->Update(deltaTime);
-        (*it)->Draw(view, projection);
+        (*it)->Draw(deltaTime, view, projection);
     }
         
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

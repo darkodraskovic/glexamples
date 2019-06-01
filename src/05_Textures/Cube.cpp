@@ -17,20 +17,38 @@ void Cube::GenerateModel()
 
     vec3 vertices[] = {
         // front
-        frontBL, zzz::FORWARD, frontBR, zzz::FORWARD, frontTR, zzz::FORWARD, frontTL, zzz::FORWARD,
+        frontBL, zzz::FORWARD, zzz::ZERO,
+        frontBR, zzz::FORWARD, zzz::RIGHT,
+        frontTR, zzz::FORWARD, zzz::ONE,
+        frontTL, zzz::FORWARD, zzz::UP,   
         // back
-        backBR, zzz::BACK, backBL, zzz::BACK, backTL, zzz::BACK, backTR, zzz::BACK,
+        backBR, zzz::BACK, zzz::ZERO, 
+        backBL, zzz::BACK, zzz::RIGHT,
+        backTL, zzz::BACK, zzz::ONE,  
+        backTR, zzz::BACK, zzz::UP,   
         // left
-        backBL, zzz::LEFT, frontBL, zzz::LEFT, frontTL, zzz::LEFT, backTL, zzz::LEFT,
+        backBL, zzz::LEFT,   zzz::ZERO, 
+        frontBL, zzz::LEFT,  zzz::RIGHT,
+        frontTL, zzz::LEFT,  zzz::ONE,  
+        backTL, zzz::LEFT,   zzz::UP,   
         // right
-        frontBR, zzz::RIGHT, backBR, zzz::RIGHT, backTR, zzz::RIGHT, frontTR, zzz::RIGHT,
+        frontBR, zzz::RIGHT, zzz::ZERO, 
+        backBR, zzz::RIGHT,  zzz::RIGHT,
+        backTR, zzz::RIGHT,  zzz::ONE,  
+        frontTR, zzz::RIGHT, zzz::UP,   
         // top
-        frontTL, zzz::UP, frontTR, zzz::UP, backTR, zzz::UP, backTL, zzz::UP,          
+        frontTL, zzz::UP, zzz::ZERO, 
+        frontTR, zzz::UP, zzz::RIGHT,
+        backTR, zzz::UP,  zzz::ONE,  
+        backTL, zzz::UP,  zzz::UP,           
         // bottom
-        backBL, zzz::DOWN, backBR, zzz::DOWN, frontBR, zzz::DOWN, frontBL, zzz::DOWN,
+        backBL, zzz::DOWN,   zzz::ZERO, 
+        backBR, zzz::DOWN,   zzz::RIGHT,
+        frontBR, zzz::DOWN,  zzz::ONE,  
+        frontBL, zzz::DOWN,  zzz::UP,   
     };
     int vLen = 24;
-    int numAttrs = 2;
+    int numAttrs = 3;
 
     unsigned int indices[] = {
         // front
@@ -59,12 +77,6 @@ void Cube::GenerateModel()
     Model::GenerateModel();
 }
 
-void Cube::Update(float deltaTime) {
-    shader_->use();
-    shader_->setVec3("uMaterial.ambient",  material_->ambient);
-    shader_->setVec3("uMaterial.diffuse",  material_->diffuse);
-    shader_->setVec3("uMaterial.specular", material_->specular);
-    shader_->setFloat("uMaterial.shininess", material_->shininess);
-    
+void Cube::Update(float deltaTime) {    
     // Rotate(deltaTime*50, zzz::ONE);
 }

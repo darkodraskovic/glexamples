@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Material.h"
 #include "Application.h"
 #include "Shader.h"
 #include "Cube.h"
@@ -25,34 +26,33 @@ int main()
     
     Shader* litSolidShader = new Shader ( "../shaders/LitSolid.vs", "../shaders/LitSolid.fs");
     Shader* litSolidTexturedShader = new Shader ( "../shaders/LitSolidTextures.vs", "../shaders/LitSolidTextures.fs");
-    
+
     Cube* cube1 = new Cube();
-    cube1->shader_ = litSolidShader;
+    cube1->material_ = new Material(litSolidShader, "Phong");
     cube1->GenerateModel();
-    zzz::PhongMaterial* mat1 = new zzz::PhongMaterial();
-    mat1->diffuse = zzz::RED;
-    cube1->material_ = mat1;
-    cube1->SetScale(2);
+    cube1->material_->phong_->diffuse = zzz::RED;
+    cube1->material_->phong_->shininess = 512;
+    cube1->Translate(zzz::ONE);
     app.models_.push_back(cube1);
 
     Cube* cube2 = new Cube();
     cube2->Clone(cube1);
-    zzz::PhongMaterial* mat2 = new zzz::PhongMaterial();
-    mat2->shininess = 512;
-    mat2->diffuse = zzz::GREEN;
-    mat2->ambient = zzz::GRAY;
-    cube2->material_ = mat2;    
+    cube2->material_ = new Material(litSolidShader, "Phong");
+    cube2->material_->phong_->diffuse = zzz::GREEN;
+    cube2->material_->phong_->ambient = zzz::GRAY;
     cube2->Translate(-zzz::ONE*2.0f);
     cube2->Scale(2);
     app.models_.push_back(cube2);
 
     Cube* cube3 = new Cube();
-    cube3->Clone(cube1);
-    zzz::PhongMaterial* mat3 = new zzz::PhongMaterial();
-    mat3->shininess = 128;
-    mat3->diffuse = zzz::BLUE;
-    cube3->material_ = mat3;    
-    cube3->Translate(zzz::ONE);
+    // cube3->Clone(cube2);
+    cube3->GenerateModel();
+    cube3->material_ = new Material(litSolidTexturedShader, "PhongMap");
+    cube3->material_->phongMap_->diffuse = diffuseMap;
+    cube3->material_->phongMap_->specular = specularMap;
+    cube3->material_->phongMap_->shininess = 16.0f;
+    // cube3->Translate(zzz::ONE);
+    cube3->SetScale(2);
     app.models_.push_back(cube3);
     
     app.camera_.position_.z = 7.0f;
@@ -63,6 +63,12 @@ int main()
     litSolidShader->setVec3("uLight.diffuse",  0.5f, 0.5f, 0.5f);
     litSolidShader->setVec3("uLight.specular", 1.0f, 1.0f, 1.0f);
     litSolidShader->setVec3("uLight.position", 0.5f, 0.0f, 5.0f);
+
+    litSolidTexturedShader->use();
+    litSolidTexturedShader->setVec3("uLight.ambient",  0.2f, 0.2f, 0.2f);
+    litSolidTexturedShader->setVec3("uLight.diffuse",  0.5f, 0.5f, 0.5f);
+    litSolidTexturedShader->setVec3("uLight.specular", zzz::GRAY);
+    litSolidTexturedShader->setVec3("uLight.position", 0.5f, 0.0f, 5.0f);
     
     // Application loop
     // ---------------------------------------------------------------------------
@@ -71,13 +77,17 @@ int main()
 
         litSolidShader->use();
         litSolidShader->setVec3("uViewPos", app.camera_.position_);
+        litSolidTexturedShader->use();
+        litSolidTexturedShader->setVec3("uViewPos", app.camera_.position_);
         
-        // float time = glfwGetTime();
-        // float sinVal = glm::sin(time);
-        // float cosVal = glm::cos(time);
-        // vec3 col = vec3(cosVal, 0.0f, sinVal);
-        // litSolidShader->setVec3("uLight.ambient", col);
-        // litSolidShader->setVec3("uLight.position", col*5.0f);
+        float time = glfwGetTime();
+        float sinVal = glm::sin(time);
+        float cosVal = glm::cos(time);
+        vec3 col = vec3(cosVal, 0.0f, sinVal);
+        litSolidShader->use();
+        litSolidShader->setVec3("uLight.position", col*5.0f);
+        litSolidTexturedShader->use();
+        litSolidTexturedShader->setVec3("uLight.position", col*5.0f);
         
         app.Update();
     }

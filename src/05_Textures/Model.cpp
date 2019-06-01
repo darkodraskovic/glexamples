@@ -82,20 +82,16 @@ Model* Model::Clone(Model* model)
     SetIndices(model->indices_, model->iLen_);
     VAO_ = model->VAO_;
     // Shader
-    shader_ = model->shader_;
+    material_ = model->material_;
     // Transform
     InitTransform();
     
     return model;
 };
 
-void Model::Draw(const glm::mat4& uView, const glm::mat4& uProjection)
+void Model::Draw(float deltaTime, const glm::mat4& uView, const glm::mat4& uProjection)
 {
-    shader_->use();
-
-    shader_->setMat4("uModel", translation_* rotation_ * scale_);
-    shader_->setMat4("uView", uView);
-    shader_->setMat4("uProjection", uProjection);
+    material_->Update(deltaTime, translation_* rotation_ * scale_, uView, uProjection);
 
     glBindVertexArray(VAO_);
     glDrawElements(GL_TRIANGLES, iLen_, GL_UNSIGNED_INT, 0);
