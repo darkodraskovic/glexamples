@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "ResourceManager.h"
 #include "Model.h"
 #include "Camera.h"
 
@@ -25,6 +26,8 @@ public:
     bool ShouldClose();
     void Terminate();
 
+    ResourceManager* resourceManager_;
+    
     std::vector<Model*> models_;
     GLFWwindow* window_;
     Camera camera_;

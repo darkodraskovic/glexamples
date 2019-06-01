@@ -19,8 +19,12 @@ int main()
 
     // Application CONTENT
     // ---------------------------------------------------------------------------
+
+    unsigned int diffuseMap = app.resourceManager_->LoadTexture("../assets/bricks_diffuse.jpg");
+    unsigned int specularMap = app.resourceManager_->LoadTexture("../assets/bricks_specular.jpg");
     
     Shader* litSolidShader = new Shader ( "../shaders/LitSolid.vs", "../shaders/LitSolid.fs");
+    Shader* litSolidTexturedShader = new Shader ( "../shaders/LitSolidTextures.vs", "../shaders/LitSolidTextures.fs");
     
     Cube* cube1 = new Cube();
     cube1->shader_ = litSolidShader;
@@ -36,6 +40,7 @@ int main()
     zzz::PhongMaterial* mat2 = new zzz::PhongMaterial();
     mat2->shininess = 512;
     mat2->diffuse = zzz::GREEN;
+    mat2->ambient = zzz::GRAY;
     cube2->material_ = mat2;    
     cube2->Translate(-zzz::ONE*2.0f);
     cube2->Scale(2);
@@ -67,12 +72,12 @@ int main()
         litSolidShader->use();
         litSolidShader->setVec3("uViewPos", app.camera_.position_);
         
-        float time = glfwGetTime();
-        float sinVal = glm::sin(time);
-        float cosVal = glm::cos(time);
-        vec3 col = vec3(cosVal, 0.0f, sinVal);
-        litSolidShader->setVec3("uLight.ambient", col);
-        litSolidShader->setVec3("uLight.position", col*5.0f);
+        // float time = glfwGetTime();
+        // float sinVal = glm::sin(time);
+        // float cosVal = glm::cos(time);
+        // vec3 col = vec3(cosVal, 0.0f, sinVal);
+        // litSolidShader->setVec3("uLight.ambient", col);
+        // litSolidShader->setVec3("uLight.position", col*5.0f);
         
         app.Update();
     }

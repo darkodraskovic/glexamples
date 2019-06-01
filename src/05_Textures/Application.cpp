@@ -64,6 +64,8 @@ int Application::Init()
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
+
+    resourceManager_ = new ResourceManager();
     
     return 0;
 };
