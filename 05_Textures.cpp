@@ -50,7 +50,7 @@ int main()
     app.models_.push_back(cube2);
 
     Cube* cube3 = new Cube();
-    cube3->Clone(cube2);
+    cube3->Copy(cube2);
     cube3->material_ = new Material(litSolidTexturedShader, "PhongMap");
     cube3->material_->phongMap_->diffuse = diffuseMetal;
     cube3->material_->phongMap_->specular = specularMetal;
@@ -61,7 +61,7 @@ int main()
     app.models_.push_back(cube3);
     
     Cube* cube4 = new Cube();
-    cube4->Clone(cube2);
+    cube4->Copy(cube2);
     cube4->material_ = new Material(litSolidTexturedShader, "PhongMap");
     cube4->material_->phongMap_->diffuse = diffuseBricks;
     cube4->material_->phongMap_->specular = specularBricks;

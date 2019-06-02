@@ -6,21 +6,29 @@ Model::Model()
 
 void Model::SetVertices(glm::vec3* vertices, int numVerts, int numAttrs)
 {
-    vertices3_ = vertices;
-    numVerts_ = numVerts;
-    numAttrs_ = numAttrs;
     attrSize_ = sizeof(glm::vec3);
-    vertSize_ = numAttrs_ * attrSize_;
+    SetVertices_(vertices, numVerts, numAttrs);
 };
 
 void Model::SetVertices(glm::vec4* vertices, int numVerts, int numAttrs)
 {
-    vertices4_ = vertices;
+    attrSize_ = sizeof(glm::vec4);
+    SetVertices_(vertices, numVerts, numAttrs);
+};
+
+void Model::SetVertices(const void* vertices, int numVerts, int numAttrs, int attrSize)
+{
+    attrSize_ = attrSize;
+    SetVertices_(vertices, numVerts, numAttrs);
+}
+
+void Model::SetVertices_(const void* vertices, int numVerts, int numAttrs)
+{
+    vertices_ = vertices;
     numVerts_ = numVerts;
     numAttrs_ = numAttrs;
-    attrSize_ = sizeof(glm::vec4);
     vertSize_ = numAttrs_ * attrSize_;    
-};
+}
 
 void Model::SetIndices(unsigned int* indices, int numIdx)
 {
@@ -37,16 +45,10 @@ void Model::GenerateModel()
     // VBO
     glGenBuffers(1, &VBO_);
     glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-    
-    if (vertices3_) {
-        glBufferData(GL_ARRAY_BUFFER, numVerts_ * vertSize_, vertices3_, GL_STATIC_DRAW);
-    }
-    else if (vertices4_){
-        glBufferData(GL_ARRAY_BUFFER, numVerts_ * vertSize_, vertices4_, GL_STATIC_DRAW);
-    }
-    
-    for (int i = 0; i < numAttrs_; ++i)
-    {
+    // data
+    glBufferData(GL_ARRAY_BUFFER, numVerts_ * vertSize_, vertices_, GL_STATIC_DRAW);
+    // attrib pointers
+    for (int i = 0; i < numAttrs_; ++i) {
         glVertexAttribPointer(i, attrSize_/sizeof(float), GL_FLOAT, GL_FALSE, vertSize_, (void*)(i*attrSize_));
         glEnableVertexAttribArray(i);
     }
@@ -58,10 +60,10 @@ void Model::GenerateModel()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIdx_ * sizeof(unsigned int), indices_, GL_STATIC_DRAW);
 
     // Transform
-    InitTransform();
+    InitTransform_();
 }
 
-void Model::InitTransform()
+void Model::InitTransform_()
 {
     id_ = glm::mat4(1.0f);
     rotation_ = glm::mat4(1.0f);
@@ -70,22 +72,25 @@ void Model::InitTransform()
     transform_ = glm::mat4(1.0f);
 };
 
-Model* Model::Clone(Model* model)
+void Model::Copy(Model* model)
 {
-    // VBO, EBO, VAO
-    if (model->vertices3_) {
-        SetVertices(model->vertices3_, model->numVerts_, model->numAttrs_);
-    } else {
-        SetVertices(model->vertices4_, model->numVerts_, model->numAttrs_);
-    }
-    SetIndices(model->indices_, model->numIdx_);
+    // VBO
+    vertices_ = model->vertices_;
+    numVerts_ = model->numVerts_;
+    numAttrs_ = model->numAttrs_;
+    attrSize_ = model->attrSize_;
+    vertSize_ = model->vertSize_;
+    // EBO
+    indices_ = model->indices_;
+    numIdx_ = model->numIdx_;
+    // VAO
     VAO_ = model->VAO_;
+    
     // Material
     material_ = model->material_;
+
     // Transform
-    InitTransform();
-    
-    return model;
+    InitTransform_();
 };
 
 void Model::Render(float deltaTime, const glm::mat4& uView, const glm::mat4& uProjection)

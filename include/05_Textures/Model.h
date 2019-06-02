@@ -12,13 +12,13 @@ class Model
  public:
     Model();
     ~Model();
-    Model* Clone(Model* model);
+    void Copy(Model* model);
     void Render(float deltaTime, const glm::mat4& uView, const glm::mat4& uProjection);
     void SetVertices(glm::vec3* vertices, int numVerts, int numAttrs);
     void SetVertices(glm::vec4* vertices, int numVerts, int numAttrs);
+    void SetVertices(const void* vertices, int numVerts, int numAttrs, int attrSize);
     void SetIndices(unsigned int* indices, int numIdx);
     virtual void GenerateModel();
-    void InitTransform();
     
     void SetRotation(float angle, const glm::vec3& axis);
     void Rotate(float angle, const glm::vec3& axis);
@@ -36,6 +36,9 @@ class Model
     unsigned int VBO_;
     
  private:
+    void InitTransform_();
+    void SetVertices_(const void* vertices, int numVerts, int numAttrs);
+    
     int numVerts_;
     int numAttrs_;
     int numIdx_;
@@ -48,8 +51,7 @@ class Model
     glm::mat4 translation_;
     glm::mat4 transform_;
     
-    glm::vec3* vertices3_ { nullptr };
-    glm::vec4* vertices4_ { nullptr };
+    const void* vertices_ { nullptr };
     unsigned int* indices_;
 };
 
