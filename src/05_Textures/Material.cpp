@@ -6,20 +6,20 @@ Material::Material()
 {
 };
 
-Material::Material(Shader* shader)
+Material::Material(std::shared_ptr<Shader> shader)
 {
-    shader_ = shader;
+    shader_ =  shader;
 };
 
-Material::Material(Shader* shader, const std::string& type)
+Material::Material(std::shared_ptr<Shader> shader, const std::string& type)
 {
     shader_ = shader;
 
     if (type == "Phong") {
-        phong_ = new material::Phong();
+        phong_ = std::unique_ptr<Phong>(new material::Phong());
     }
     else if (type == "PhongMap") {
-        phongMap_ = new material::PhongMap();
+        phongMap_ = std::unique_ptr<PhongMap>(new material::PhongMap());
     }
 };
 

@@ -27,7 +27,7 @@ public:
     bool ShouldClose();
     void Terminate();
 
-    std::unique_ptr<ResourceManager> resourceManager_;
+    ResourceManager resourceManager_;
     
     std::vector<std::shared_ptr<Model>> models_;
     GLFWwindow* window_;

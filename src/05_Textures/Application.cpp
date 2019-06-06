@@ -65,8 +65,6 @@ int Application::Init()
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
-    resourceManager_ = std::make_unique<ResourceManager>();
-    
     return 0;
 };
 

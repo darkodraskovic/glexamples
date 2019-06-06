@@ -21,15 +21,17 @@ int main()
     // Application CONTENT
     // ---------------------------------------------------------------------------
     
-    unsigned int diffuseBricks = app.resourceManager_->LoadTexture("../assets/bricks_diffuse.jpg");
-    unsigned int specularBricks = app.resourceManager_->LoadTexture("../assets/bricks_specular.jpg");
-    unsigned int emissiveBricks = app.resourceManager_->LoadTexture("../assets/bricks_emissive_green.png");
-    unsigned int diffuseMetal = app.resourceManager_->LoadTexture("../assets/metal_diffuse.jpg");
-    unsigned int specularMetal = app.resourceManager_->LoadTexture("../assets/metal_specular.jpg");
-    unsigned int emissiveMetal = app.resourceManager_->LoadTexture("../assets/metal_emissive_red.png");
+    unsigned int diffuseBricks = app.resourceManager_.LoadTexture("../assets/bricks_diffuse.jpg");
+    unsigned int specularBricks = app.resourceManager_.LoadTexture("../assets/bricks_specular.jpg");
+    unsigned int emissiveBricks = app.resourceManager_.LoadTexture("../assets/bricks_emissive_green.png");
+    unsigned int diffuseMetal = app.resourceManager_.LoadTexture("../assets/metal_diffuse.jpg");
+    unsigned int specularMetal = app.resourceManager_.LoadTexture("../assets/metal_specular.jpg");
+    unsigned int emissiveMetal = app.resourceManager_.LoadTexture("../assets/metal_emissive_red.png");
     
-    Shader* litSolidShader = new Shader ( "../shaders/LitSolid.vs", "../shaders/LitSolid.fs");
-    Shader* litSolidTexturedShader = new Shader ( "../shaders/LitSolidTextured.vs", "../shaders/LitSolidTextured.fs");
+    auto litSolidShader = std::shared_ptr<Shader>(
+        new Shader( "../shaders/LitSolid.vs", "../shaders/LitSolid.fs"));
+    auto litSolidTexturedShader = std::shared_ptr<Shader>(
+        new Shader( "../shaders/LitSolidTextured.vs", "../shaders/LitSolidTextured.fs"));
 
     auto cube2 = std::make_shared<Cube>();
     cube2->GenerateModel();
@@ -42,13 +44,13 @@ int main()
     app.models_.push_back(cube2);
 
     auto cube3 = std::make_shared<Cube>();
-    cube3->Copy(cube2);
+    cube3->Copy(cube2.get());
     cube3->Translate(-zzz::ONE*2.0f);
     cube3->Scale(2);
     app.models_.push_back(cube3);
     
     auto cube4 = std::make_shared<Cube>();
-    cube4->Copy(cube3);
+    cube4->Copy(cube3.get());
     cube4->material_ = std::shared_ptr<Material>(new Material(litSolidTexturedShader, "PhongMap"));
     cube4->material_->phongMap_->diffuse = diffuseBricks;
     cube4->material_->phongMap_->specular = specularBricks;

@@ -20,7 +20,7 @@ class Model
     void SetVertices(float vertices[], int numVerts, int numAttrs, int attrSize);
     void SetIndices(unsigned int indices[], int numIdx);
     virtual void GenerateModel();
-    void Copy(std::shared_ptr<Model> model);
+    void Copy(Model* model);
     
     void SetRotation(float angle, const glm::vec3& axis);
     void Rotate(float angle, const glm::vec3& axis);

@@ -74,7 +74,7 @@ void Model::InitTransform_()
     transform_ = glm::mat4(1.0f);
 };
 
-void Model::Copy(std::shared_ptr<Model> model)
+void Model::Copy(Model* model)
 {
     // VBO
     VBO_ = model->VBO_;
