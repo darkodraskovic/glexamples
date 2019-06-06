@@ -41,32 +41,29 @@ int main()
 
     Cube* cube2 = new Cube();
     cube2->GenerateModel();
-    cube2->material_ = new Material(litSolidTexturedShader, "PhongMap");
-    cube2->material_->phongMap_->diffuse = diffuseMetal;
-    cube2->material_->phongMap_->specular = specularMetal;
-    cube2->material_->phongMap_->emissive = emissiveMetal;
-    cube2->material_->phongMap_->shininess = 1024.0f;
+    cube2->SetMaterial(new Material(litSolidTexturedShader, "PhongMap"));
+    auto* material = cube2->GetMaterial();
+    material->phongMap_->diffuse = diffuseMetal;
+    material->phongMap_->specular = specularMetal;
+    material->phongMap_->emissive = emissiveMetal;
+    material->phongMap_->shininess = 1024.0f;
     cube2->SetScale(2);
     app.models_.push_back(cube2);
 
     Cube* cube3 = new Cube();
     cube3->Copy(cube2);
-    cube3->material_ = new Material(litSolidTexturedShader, "PhongMap");
-    cube3->material_->phongMap_->diffuse = diffuseMetal;
-    cube3->material_->phongMap_->specular = specularMetal;
-    cube3->material_->phongMap_->emissive = emissiveMetal;
-    cube3->material_->phongMap_->shininess = 256.0f;
+    material = new Material(litSolidTexturedShader, "PhongMap");
+    cube3->SetMaterial(material);
+    material->phongMap_->diffuse = diffuseBricks;
+    material->phongMap_->specular = specularBricks;
+    material->phongMap_->emissive = emissiveBricks;
+    material->phongMap_->shininess = 128.0f;
     cube3->Translate(-zzz::ONE*2.0f);
     cube3->Scale(2);
     app.models_.push_back(cube3);
     
     Cube* cube4 = new Cube();
     cube4->Copy(cube2);
-    cube4->material_ = new Material(litSolidTexturedShader, "PhongMap");
-    cube4->material_->phongMap_->diffuse = diffuseBricks;
-    cube4->material_->phongMap_->specular = specularBricks;
-    cube4->material_->phongMap_->emissive = emissiveBricks;
-    cube4->material_->phongMap_->shininess = 64.0f;
     cube4->Translate(zzz::ONE*2.0f);
     cube4->Scale(2);
     app.models_.push_back(cube4);

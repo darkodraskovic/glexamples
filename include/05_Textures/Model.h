@@ -1,6 +1,8 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <memory>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -16,8 +18,10 @@ class Model
     void Render(float deltaTime, const glm::mat4& uView, const glm::mat4& uProjection);
     void SetVertices(glm::vec3* vertices, int numVerts, int numAttrs);
     void SetVertices(glm::vec4* vertices, int numVerts, int numAttrs);
-    void SetVertices(const void* vertices, int numVerts, int numAttrs, int attrSize);
+    void SetVertices(float* vertices, int numVerts, int numAttrs, int attrSize);
     void SetIndices(unsigned int* indices, int numIdx);
+    void SetMaterial(Material* material);
+    Material* GetMaterial();
     virtual void GenerateModel();
     
     void SetRotation(float angle, const glm::vec3& axis);
@@ -31,13 +35,14 @@ class Model
     
     virtual void Update(float deltaTime);
     
-    Material* material_;
+
     unsigned int VAO_;
     unsigned int VBO_;
+    unsigned int EBO_;
     
  private:
     void InitTransform_();
-    void SetVertices_(const void* vertices, int numVerts, int numAttrs);
+    void SetVertices_(float* vertices, int numVerts, int numAttrs);
     
     int numVerts_;
     int numAttrs_;
@@ -50,9 +55,10 @@ class Model
     glm::mat4 scale_;
     glm::mat4 translation_;
     glm::mat4 transform_;
-    
-    const void* vertices_ { nullptr };
-    unsigned int* indices_;
+
+    std::shared_ptr<float> vertices_;
+    std::shared_ptr<unsigned int> indices_;
+    std::shared_ptr<Material> material_;    
 };
 
 #endif

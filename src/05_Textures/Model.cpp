@@ -7,24 +7,24 @@ Model::Model()
 void Model::SetVertices(glm::vec3* vertices, int numVerts, int numAttrs)
 {
     attrSize_ = sizeof(glm::vec3);
-    SetVertices_(vertices, numVerts, numAttrs);
+    SetVertices_((float*)vertices, numVerts, numAttrs);
 };
 
 void Model::SetVertices(glm::vec4* vertices, int numVerts, int numAttrs)
 {
     attrSize_ = sizeof(glm::vec4);
-    SetVertices_(vertices, numVerts, numAttrs);
+    SetVertices_((float*)vertices, numVerts, numAttrs);
 };
 
-void Model::SetVertices(const void* vertices, int numVerts, int numAttrs, int attrSize)
+void Model::SetVertices(float* vertices, int numVerts, int numAttrs, int attrSize)
 {
     attrSize_ = attrSize;
     SetVertices_(vertices, numVerts, numAttrs);
 }
 
-void Model::SetVertices_(const void* vertices, int numVerts, int numAttrs)
+void Model::SetVertices_(float* vertices, int numVerts, int numAttrs)
 {
-    vertices_ = vertices;
+    vertices_ = std::shared_ptr<float>(vertices);
     numVerts_ = numVerts;
     numAttrs_ = numAttrs;
     vertSize_ = numAttrs_ * attrSize_;    
@@ -32,7 +32,7 @@ void Model::SetVertices_(const void* vertices, int numVerts, int numAttrs)
 
 void Model::SetIndices(unsigned int* indices, int numIdx)
 {
-    indices_ = indices;
+    indices_ = std::shared_ptr<unsigned int>(indices);
     numIdx_ = numIdx;
 };
 
@@ -46,7 +46,7 @@ void Model::GenerateModel()
     glGenBuffers(1, &VBO_);
     glBindBuffer(GL_ARRAY_BUFFER, VBO_);
     // data
-    glBufferData(GL_ARRAY_BUFFER, numVerts_ * vertSize_, vertices_, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, numVerts_ * vertSize_, vertices_.get(), GL_STATIC_DRAW);
     // attrib pointers
     for (int i = 0; i < numAttrs_; ++i) {
         glVertexAttribPointer(i, attrSize_/sizeof(float), GL_FLOAT, GL_FALSE, vertSize_, (void*)(i*attrSize_));
@@ -54,10 +54,9 @@ void Model::GenerateModel()
     }
     
     // EBO
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIdx_ * sizeof(unsigned int), indices_, GL_STATIC_DRAW);
+    glGenBuffers(1, &EBO_);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIdx_ * sizeof(unsigned int), indices_.get(), GL_STATIC_DRAW);
 
     // Transform
     InitTransform_();
@@ -72,22 +71,34 @@ void Model::InitTransform_()
     transform_ = glm::mat4(1.0f);
 };
 
+void Model::SetMaterial(Material* material)
+{
+    material_ = std::shared_ptr<Material>(material);
+};
+
+Material* Model::GetMaterial()
+{
+    return material_.get();
+};
+
 void Model::Copy(Model* model)
 {
     // VBO
-    vertices_ = model->vertices_;
+    VBO_ = model->VBO_;
+    vertices_ = std::shared_ptr<float>(model->vertices_);
     numVerts_ = model->numVerts_;
     numAttrs_ = model->numAttrs_;
     attrSize_ = model->attrSize_;
     vertSize_ = model->vertSize_;
     // EBO
-    indices_ = model->indices_;
+    EBO_ = model->EBO_;
+    indices_ = std::shared_ptr<unsigned int>(model->indices_);
     numIdx_ = model->numIdx_;
     // VAO
     VAO_ = model->VAO_;
     
     // Material
-    material_ = model->material_;
+    material_ = std::shared_ptr<Material>(model->material_);
 
     // Transform
     InitTransform_();
@@ -149,6 +160,9 @@ void Model::Update(float deltaTime)
 
 Model::~Model()
 {
-    glDeleteVertexArrays(1, &VAO_);
-    glDeleteBuffers(1, &VBO_);
+    if (vertices_.use_count() <= 1) {
+        glDeleteVertexArrays(1, &VAO_);
+        glDeleteBuffers(1, &VBO_);
+        glDeleteBuffers(1, &EBO_);
+    }
 };
