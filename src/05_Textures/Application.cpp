@@ -65,7 +65,7 @@ int Application::Init()
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
-    resourceManager_ = new ResourceManager();
+    resourceManager_ = std::make_unique<ResourceManager>();
     
     return 0;
 };
@@ -110,7 +110,7 @@ void Application::Render(float deltaTime)
     glm::mat4 view = camera_.GetViewMatrix();
     glm::mat4 projection = camera_.GetProjectionMatrix(SCR_WIDTH, SCR_HEIGHT);
 
-    for(std::vector<Model*>::iterator it = models_.begin(); it != models_.end(); ++it) {
+    for(std::vector<std::shared_ptr<Model>>::iterator it = models_.begin(); it != models_.end(); ++it) {
         (*it)->Update(deltaTime);
         (*it)->Render(deltaTime, view, projection);
     }
@@ -142,10 +142,6 @@ bool Application::ShouldClose()
 };
 void Application::Terminate()
 {
-    for(std::vector<Model*>::iterator it = models_.begin(); it != models_.end(); ++it) {
-        delete (*it);
-    }
-
     glfwTerminate();
 };
 

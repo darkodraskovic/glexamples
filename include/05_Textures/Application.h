@@ -2,6 +2,7 @@
 #define APPLICATION_H
 
 #include <vector>
+#include <memory>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -26,9 +27,9 @@ public:
     bool ShouldClose();
     void Terminate();
 
-    ResourceManager* resourceManager_;
+    std::unique_ptr<ResourceManager> resourceManager_;
     
-    std::vector<Model*> models_;
+    std::vector<std::shared_ptr<Model>> models_;
     GLFWwindow* window_;
     Camera camera_;
 

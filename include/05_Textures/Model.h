@@ -14,15 +14,13 @@ class Model
  public:
     Model();
     ~Model();
-    void Copy(Model* model);
-    void Render(float deltaTime, const glm::mat4& uView, const glm::mat4& uProjection);
-    void SetVertices(glm::vec3* vertices, int numVerts, int numAttrs);
-    void SetVertices(glm::vec4* vertices, int numVerts, int numAttrs);
-    void SetVertices(float* vertices, int numVerts, int numAttrs, int attrSize);
-    void SetIndices(unsigned int* indices, int numIdx);
-    void SetMaterial(Material* material);
-    Material* GetMaterial();
+
+    void SetVertices(glm::vec3 vertices[], int numVerts, int numAttrs);
+    void SetVertices(glm::vec4 vertices[], int numVerts, int numAttrs);
+    void SetVertices(float vertices[], int numVerts, int numAttrs, int attrSize);
+    void SetIndices(unsigned int indices[], int numIdx);
     virtual void GenerateModel();
+    void Copy(std::shared_ptr<Model> model);
     
     void SetRotation(float angle, const glm::vec3& axis);
     void Rotate(float angle, const glm::vec3& axis);
@@ -33,16 +31,18 @@ class Model
     void SetTranslation(const glm::vec3& translation);
     void Translate(const glm::vec3& translation);
     
+    void Render(float deltaTime, const glm::mat4& uView, const glm::mat4& uProjection);
     virtual void Update(float deltaTime);
     
-
     unsigned int VAO_;
     unsigned int VBO_;
     unsigned int EBO_;
     
+    std::shared_ptr<Material> material_;
+    
  private:
     void InitTransform_();
-    void SetVertices_(float* vertices, int numVerts, int numAttrs);
+    void SetVertices_(float vertices[], int numVerts, int numAttrs);
     
     int numVerts_;
     int numAttrs_;
@@ -56,9 +56,8 @@ class Model
     glm::mat4 translation_;
     glm::mat4 transform_;
 
-    std::shared_ptr<float> vertices_;
-    std::shared_ptr<unsigned int> indices_;
-    std::shared_ptr<Material> material_;    
+    std::shared_ptr<float []> vertices_;
+    std::shared_ptr<unsigned int []> indices_;
 };
 
 #endif

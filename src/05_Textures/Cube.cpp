@@ -52,6 +52,7 @@ void Cube::GenerateModel()
     SetVertices(vertices, vLen, numAttrs);
     
     int iLen = 6 * 2 * 3; // num sides x num tris per side x num verts per tri
+    // unsigned int* indices = new unsigned int[iLen]{
     unsigned int* indices = new unsigned int[iLen]{
         // front
         0, 1, 2,

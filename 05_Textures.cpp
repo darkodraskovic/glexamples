@@ -20,7 +20,7 @@ int main()
 
     // Application CONTENT
     // ---------------------------------------------------------------------------
-
+    
     unsigned int diffuseBricks = app.resourceManager_->LoadTexture("../assets/bricks_diffuse.jpg");
     unsigned int specularBricks = app.resourceManager_->LoadTexture("../assets/bricks_specular.jpg");
     unsigned int emissiveBricks = app.resourceManager_->LoadTexture("../assets/bricks_emissive_green.png");
@@ -31,45 +31,35 @@ int main()
     Shader* litSolidShader = new Shader ( "../shaders/LitSolid.vs", "../shaders/LitSolid.fs");
     Shader* litSolidTexturedShader = new Shader ( "../shaders/LitSolidTextured.vs", "../shaders/LitSolidTextured.fs");
 
-    // Cube* cube1 = new Cube();
-    // cube1->material_ = new Material(litSolidShader, "Phong");
-    // cube1->GenerateModel();
-    // cube1->material_->phong_->diffuse = zzz::RED;
-    // cube1->material_->phong_->shininess = 512;
-    // cube1->Translate(zzz::ONE);
-    // app.models_.push_back(cube1);
-
-    Cube* cube2 = new Cube();
+    auto cube2 = std::make_shared<Cube>();
     cube2->GenerateModel();
-    cube2->SetMaterial(new Material(litSolidTexturedShader, "PhongMap"));
-    auto* material = cube2->GetMaterial();
-    material->phongMap_->diffuse = diffuseMetal;
-    material->phongMap_->specular = specularMetal;
-    material->phongMap_->emissive = emissiveMetal;
-    material->phongMap_->shininess = 1024.0f;
+    cube2->material_ = std::shared_ptr<Material>(new Material(litSolidTexturedShader, "PhongMap"));
+    cube2->material_->phongMap_->diffuse = diffuseMetal;
+    cube2->material_->phongMap_->specular = specularMetal;
+    cube2->material_->phongMap_->emissive = emissiveMetal;
+    cube2->material_->phongMap_->shininess = 1024.0f;
     cube2->SetScale(2);
     app.models_.push_back(cube2);
 
-    Cube* cube3 = new Cube();
+    auto cube3 = std::make_shared<Cube>();
     cube3->Copy(cube2);
-    material = new Material(litSolidTexturedShader, "PhongMap");
-    cube3->SetMaterial(material);
-    material->phongMap_->diffuse = diffuseBricks;
-    material->phongMap_->specular = specularBricks;
-    material->phongMap_->emissive = emissiveBricks;
-    material->phongMap_->shininess = 128.0f;
     cube3->Translate(-zzz::ONE*2.0f);
     cube3->Scale(2);
     app.models_.push_back(cube3);
     
-    Cube* cube4 = new Cube();
-    cube4->Copy(cube2);
+    auto cube4 = std::make_shared<Cube>();
+    cube4->Copy(cube3);
+    cube4->material_ = std::shared_ptr<Material>(new Material(litSolidTexturedShader, "PhongMap"));
+    cube4->material_->phongMap_->diffuse = diffuseBricks;
+    cube4->material_->phongMap_->specular = specularBricks;
+    cube4->material_->phongMap_->emissive = emissiveBricks;
+    cube4->material_->phongMap_->shininess = 128.0f;
     cube4->Translate(zzz::ONE*2.0f);
     cube4->Scale(2);
     app.models_.push_back(cube4);
     
     app.camera_.position_.z = 12.0f;
-
+    
     // Light
     litSolidShader->use();
     litSolidShader->setVec3("uLight.ambient",  0.2f, 0.2f, 0.2f);

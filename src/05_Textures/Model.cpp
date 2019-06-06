@@ -4,35 +4,35 @@ Model::Model()
 {
 };
 
-void Model::SetVertices(glm::vec3* vertices, int numVerts, int numAttrs)
+void Model::SetVertices(glm::vec3 vertices[], int numVerts, int numAttrs)
 {
     attrSize_ = sizeof(glm::vec3);
     SetVertices_((float*)vertices, numVerts, numAttrs);
 };
 
-void Model::SetVertices(glm::vec4* vertices, int numVerts, int numAttrs)
+void Model::SetVertices(glm::vec4 vertices[], int numVerts, int numAttrs)
 {
     attrSize_ = sizeof(glm::vec4);
     SetVertices_((float*)vertices, numVerts, numAttrs);
 };
 
-void Model::SetVertices(float* vertices, int numVerts, int numAttrs, int attrSize)
+void Model::SetVertices(float vertices[], int numVerts, int numAttrs, int attrSize)
 {
     attrSize_ = attrSize;
     SetVertices_(vertices, numVerts, numAttrs);
 }
 
-void Model::SetVertices_(float* vertices, int numVerts, int numAttrs)
+void Model::SetVertices_(float vertices[], int numVerts, int numAttrs)
 {
-    vertices_ = std::shared_ptr<float>(vertices);
+    vertices_ = std::shared_ptr<float []>(vertices);
     numVerts_ = numVerts;
     numAttrs_ = numAttrs;
     vertSize_ = numAttrs_ * attrSize_;    
 }
 
-void Model::SetIndices(unsigned int* indices, int numIdx)
+void Model::SetIndices(unsigned int indices[], int numIdx)
 {
-    indices_ = std::shared_ptr<unsigned int>(indices);
+    indices_ = std::shared_ptr<unsigned int []>(indices);
     numIdx_ = numIdx;
 };
 
@@ -49,7 +49,10 @@ void Model::GenerateModel()
     glBufferData(GL_ARRAY_BUFFER, numVerts_ * vertSize_, vertices_.get(), GL_STATIC_DRAW);
     // attrib pointers
     for (int i = 0; i < numAttrs_; ++i) {
-        glVertexAttribPointer(i, attrSize_/sizeof(float), GL_FLOAT, GL_FALSE, vertSize_, (void*)(i*attrSize_));
+        glVertexAttribPointer(
+            i, attrSize_/sizeof(float),
+            GL_FLOAT, GL_FALSE,
+            vertSize_, (void*)(i*attrSize_));
         glEnableVertexAttribArray(i);
     }
     
@@ -71,28 +74,18 @@ void Model::InitTransform_()
     transform_ = glm::mat4(1.0f);
 };
 
-void Model::SetMaterial(Material* material)
-{
-    material_ = std::shared_ptr<Material>(material);
-};
-
-Material* Model::GetMaterial()
-{
-    return material_.get();
-};
-
-void Model::Copy(Model* model)
+void Model::Copy(std::shared_ptr<Model> model)
 {
     // VBO
     VBO_ = model->VBO_;
-    vertices_ = std::shared_ptr<float>(model->vertices_);
+    vertices_ = std::shared_ptr<float []>(model->vertices_);
     numVerts_ = model->numVerts_;
     numAttrs_ = model->numAttrs_;
     attrSize_ = model->attrSize_;
     vertSize_ = model->vertSize_;
     // EBO
     EBO_ = model->EBO_;
-    indices_ = std::shared_ptr<unsigned int>(model->indices_);
+    indices_ = std::shared_ptr<unsigned int []>(model->indices_);
     numIdx_ = model->numIdx_;
     // VAO
     VAO_ = model->VAO_;
@@ -160,9 +153,15 @@ void Model::Update(float deltaTime)
 
 Model::~Model()
 {
-    if (vertices_.use_count() <= 1) {
-        glDeleteVertexArrays(1, &VAO_);
+    bool delVBO = vertices_.use_count() <= 1;
+    bool delEBO = indices_.use_count() <= 1;
+    if (delVBO) {
         glDeleteBuffers(1, &VBO_);
+    }
+    if (delEBO) {
         glDeleteBuffers(1, &EBO_);
+    }
+    if (delVBO && delEBO) {
+        glDeleteVertexArrays(1, &VAO_);
     }
 };
