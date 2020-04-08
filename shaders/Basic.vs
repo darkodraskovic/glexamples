@@ -1,5 +1,6 @@
 #version 330 core
 
+uniform mat4 uTransform;
 uniform mat4 uModel;
 uniform mat4 uView;
 uniform mat4 uProjection;

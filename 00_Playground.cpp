@@ -7,7 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include <stb/stb_image.h>
 
 #include "Shader.h"
 
@@ -53,14 +53,14 @@ int main()
 
     // Shader
     Shader shader(
-        "/home/darko/Radovi/AppDev/OpenGL/shaders/vs.glsl",
-        "/home/darko/Radovi/AppDev/OpenGL/shaders/fs.glsl");
+        "../shaders/Basic.vs",
+        "../shaders/Basic.fs");
     
     // Textures
     stbi_set_flip_vertically_on_load(true);
     int width, height, nrChannels;
 
-    const char* file_name = "/home/darko/Radovi/AppDev/OpenGL/assets/container.jpg";
+    const char* file_name = "../assets/container.jpg";
     unsigned char *textureData0 = stbi_load(file_name, &width, &height, &nrChannels, 0);
     if (!textureData0) {
         std::cout << "Failed to load texture 0" << std::endl;
@@ -74,7 +74,7 @@ int main()
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(textureData0);
 
-    file_name = "/home/darko/Radovi/AppDev/OpenGL/assets/awesomeface.png";
+    file_name = "../assets/awesomeface.png";
     unsigned char *textureData1 = stbi_load(file_name, &width, &height, &nrChannels, 0);
     if (!textureData1) {
         std::cout << "Failed to load texture 1" << std::endl;

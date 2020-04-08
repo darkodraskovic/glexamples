@@ -1,1 +1,2 @@
-build
+build/
+source/glad.c

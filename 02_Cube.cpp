@@ -11,7 +11,7 @@
 #include "Shader.h"
 
 #include "Model.h"
-#include "src/02_Cube/Cube.cpp"
+#include "Cube.h"
 
 using namespace std;
 using namespace glm;
