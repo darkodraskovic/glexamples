@@ -25,7 +25,7 @@ int main()
     Cube* cube1 = new Cube();
     cube1->shader_ = litSolidShader;
     cube1->GenerateModel();
-    zzz::PhongMaterial* mat1 = new zzz::PhongMaterial();
+    PhongMaterial* mat1 = new PhongMaterial();
     mat1->diffuse = zzz::RED;
     cube1->material_ = mat1;
     cube1->SetScale(2);
@@ -33,7 +33,7 @@ int main()
 
     Cube* cube2 = new Cube();
     cube2->Clone(cube1);
-    zzz::PhongMaterial* mat2 = new zzz::PhongMaterial();
+    PhongMaterial* mat2 = new PhongMaterial();
     mat2->shininess = 512;
     mat2->diffuse = zzz::GREEN;
     cube2->material_ = mat2;    
@@ -43,7 +43,7 @@ int main()
 
     Cube* cube3 = new Cube();
     cube3->Clone(cube1);
-    zzz::PhongMaterial* mat3 = new zzz::PhongMaterial();
+    PhongMaterial* mat3 = new PhongMaterial();
     mat3->shininess = 128;
     mat3->diffuse = zzz::BLUE;
     cube3->material_ = mat3;    

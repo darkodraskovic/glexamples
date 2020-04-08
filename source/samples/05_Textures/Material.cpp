@@ -1,6 +1,7 @@
 #include "Material.h"
 
 using namespace glm;
+using namespace MaterialDefinitions;
 
 Material::Material()
 {
@@ -16,10 +17,10 @@ Material::Material(std::shared_ptr<Shader> shader, const std::string& type)
     shader_ = shader;
 
     if (type == "Phong") {
-        phong_ = std::unique_ptr<Phong>(new material::Phong());
+        phong_ = std::unique_ptr<Phong>(new Phong());
     }
     else if (type == "PhongMap") {
-        phongMap_ = std::unique_ptr<PhongMap>(new material::PhongMap());
+        phongMap_ = std::unique_ptr<PhongMap>(new PhongMap());
     }
 };
 

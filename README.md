@@ -20,7 +20,7 @@ make
 sudo cp -a include /usr/local/
 ```
 
-Copy *glad.c* from *glad/src/* git cloned source directory to the project *source/* directory. 
+Copy *glad.c* from *glad/src/* git cloned source directory to the project *source/engine/* directory. 
 
 Install [STB library](https://github.com/nothings/stb) for image handling:
 

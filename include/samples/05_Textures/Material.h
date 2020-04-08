@@ -12,7 +12,7 @@
 
 using namespace glm;
 
-namespace material
+namespace MaterialDefinitions
 {
     struct Phong
     {
@@ -35,7 +35,7 @@ namespace material
     };
 }
 
-using namespace material;
+using namespace MaterialDefinitions;
 
 class Material
 {
