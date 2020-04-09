@@ -1,12 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <memory>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include "Material.h"
 
 class Model
