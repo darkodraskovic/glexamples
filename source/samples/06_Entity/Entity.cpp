@@ -4,7 +4,7 @@
 
 Entity::Entity()
 {
-    model_ = std::shared_ptr<Model>(new Model());
+    mesh_ = std::shared_ptr<Mesh>(new Mesh());
     
     id_ = glm::mat4(1.0f);
     rotation_ = glm::mat4(1.0f);
@@ -60,5 +60,5 @@ void Entity::Update(float deltaTime)
 void Entity::Draw(float deltaTime, const glm::mat4& uView, const glm::mat4& uProjection)
 {
     material_->Update(deltaTime, translation_* rotation_ * scale_, uView, uProjection);
-    model_->Render();
+    mesh_->Render();
 }
