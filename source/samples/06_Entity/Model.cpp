@@ -2,7 +2,10 @@
 
 Model::Model()
 {
+    glGenVertexArrays(1, &VAO_);
 }
+
+// INTERLEAVED arrays
 
 void Model::SetVertices(glm::vec3 vertices[], int numVerts, int numAttrs)
 {
@@ -39,15 +42,12 @@ void Model::SetIndices(unsigned int indices[], int numIdx)
 void Model::Generate()
 {
     // VAO
-    glGenVertexArrays(1, &VAO_);
     glBindVertexArray(VAO_);
 
     // VBO
     glGenBuffers(1, &VBO_);
     glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-    // data
     glBufferData(GL_ARRAY_BUFFER, numVerts_ * vertSize_, vertices_.get(), GL_STATIC_DRAW);
-    // attrib pointers
     for (int i = 0; i < numAttrs_; ++i) {
         glVertexAttribPointer(
             i, attrSize_ / sizeof(float), GL_FLOAT, GL_FALSE, vertSize_, (void*)(i*attrSize_));
@@ -62,22 +62,43 @@ void Model::Generate()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIdx_ * sizeof(unsigned int), indices_.get(), GL_STATIC_DRAW);
 }
 
-void Model::Copy(Model* model)
+// SEPARATE arrays
+
+void Model::GenArrayBuffer(const float attribArray[], int elemPerAttr, int numVerts)
 {
-    // VBO
-    VBO_ = model->VBO_;
-    vertices_ = std::shared_ptr<float []>(model->vertices_);
-    numVerts_ = model->numVerts_;
-    numAttrs_ = model->numAttrs_;
-    attrSize_ = model->attrSize_;
-    vertSize_ = model->vertSize_;
-    // EBO
-    EBO_ = model->EBO_;
-    indices_ = std::shared_ptr<unsigned int []>(model->indices_);
-    numIdx_ = model->numIdx_;
+    numVerts_ = numVerts;
+    
     // VAO
-    VAO_ = model->VAO_;
+    glBindVertexArray(VAO_);
+    
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+    VBOs_.push_back(VBO);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, elemPerAttr, attribArray, GL_STATIC_DRAW);
+    int idx = VBOs_.size()-1;
+    glVertexAttribPointer(idx, elemPerAttr, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(idx);
+
+    glBindVertexArray(0);
 }
+
+void Model::GenElementBuffer(unsigned int indices[], int numIdx)
+{
+    numIdx_ = numIdx;
+    
+    // VAO
+    glBindVertexArray(VAO_);
+    
+    glGenBuffers(1, &EBO_);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIdx_ * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
+    glBindVertexArray(0);
+}
+
+// RENDER
 
 void Model::Render()
 {
@@ -91,6 +112,8 @@ void Model::Render()
     
     glBindVertexArray(0);
 }
+
+// DESTRUCTOR
 
 Model::~Model()
 {

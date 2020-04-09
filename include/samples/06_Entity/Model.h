@@ -1,6 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <vector> 
 #include "Material.h"
 
 class Model
@@ -13,8 +14,11 @@ public:
     void SetVertices(glm::vec4 vertices[], int numVerts, int numAttrs);
     void SetVertices(float vertices[], int numVerts, int numAttrs, int elemPerAttr);
     void SetIndices(unsigned int indices[], int numIdx);
+
+    void GenArrayBuffer(const float attribArray[], int elemPerAttr, int numVerts);
+    void GenElementBuffer(unsigned int indices[], int numIdx);
+    
     void Generate();
-    void Copy(Model* model);
 
     void Render();
 
@@ -35,6 +39,8 @@ private:
 
     std::shared_ptr<float []> vertices_;
     std::shared_ptr<unsigned int []> indices_;
+
+    std::vector<unsigned int> VBOs_;
 };
 
 #endif
