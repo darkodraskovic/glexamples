@@ -11,7 +11,7 @@ public:
 
     void SetVertices(glm::vec3 vertices[], int numVerts, int numAttrs);
     void SetVertices(glm::vec4 vertices[], int numVerts, int numAttrs);
-    void SetVertices(float vertices[], int numVerts, int numAttrs, int attrSize);
+    void SetVertices(float vertices[], int numVerts, int numAttrs, int elemPerAttr);
     void SetIndices(unsigned int indices[], int numIdx);
     void Generate();
     void Copy(Model* model);
@@ -22,6 +22,8 @@ public:
     unsigned int VBO_;
     unsigned int EBO_;
 
+	GLenum mode_ = GL_TRIANGLES;
+    
 private:
     void SetVertices_(float vertices[], int numVerts, int numAttrs);
 

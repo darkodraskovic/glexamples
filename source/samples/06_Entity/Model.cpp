@@ -16,9 +16,9 @@ void Model::SetVertices(glm::vec4 vertices[], int numVerts, int numAttrs)
     SetVertices_((float*)vertices, numVerts, numAttrs);
 }
 
-void Model::SetVertices(float vertices[], int numVerts, int numAttrs, int attrSize)
+void Model::SetVertices(float vertices[], int numVerts, int numAttrs, int elemPerAttr)
 {
-    attrSize_ = attrSize;
+    attrSize_ = elemPerAttr * sizeof(float);
     SetVertices_(vertices, numVerts, numAttrs);
 }
 
@@ -50,13 +50,13 @@ void Model::Generate()
     // attrib pointers
     for (int i = 0; i < numAttrs_; ++i) {
         glVertexAttribPointer(
-            i, attrSize_/sizeof(float),
-            GL_FLOAT, GL_FALSE,
-            vertSize_, (void*)(i*attrSize_));
+            i, attrSize_ / sizeof(float), GL_FLOAT, GL_FALSE, vertSize_, (void*)(i*attrSize_));
         glEnableVertexAttribArray(i);
     }
     
     // EBO
+    if (!indices_) return;
+    
     glGenBuffers(1, &EBO_);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIdx_ * sizeof(unsigned int), indices_.get(), GL_STATIC_DRAW);
@@ -82,7 +82,13 @@ void Model::Copy(Model* model)
 void Model::Render()
 {
     glBindVertexArray(VAO_);
-    glDrawElements(GL_TRIANGLES, numIdx_, GL_UNSIGNED_INT, 0);
+    
+    if (indices_) {
+        glDrawElements(mode_, numIdx_, GL_UNSIGNED_INT, 0);
+    } else {
+        glDrawArrays(mode_, 0, numVerts_);
+    }
+    
     glBindVertexArray(0);
 }
 
