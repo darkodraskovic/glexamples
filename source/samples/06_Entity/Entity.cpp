@@ -1,5 +1,7 @@
 #include "Entity.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 Entity::Entity()
 {
     model_ = std::shared_ptr<Model>(new Model());

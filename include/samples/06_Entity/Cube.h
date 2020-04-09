@@ -8,7 +8,7 @@
 class Cube : public Entity
 {
 public:
-    Cube(std::shared_ptr<Material>& material);
+    Cube(const std::shared_ptr<Material>& material);
     virtual void Update(float time) override;
 };
 

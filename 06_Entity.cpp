@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Application.h"
-#include "Material.h"
+#include "PhongMap.h"
 #include "Shader.h"
 #include "Cube.h"
 #include "zzz.h"
@@ -31,21 +31,21 @@ int main()
     auto litSolidTexturedShader = std::shared_ptr<Shader>(
         new Shader( "../shaders/LitSolidTextured.vs", "../shaders/LitSolidTextured.fs"));
 
-    auto material = std::shared_ptr<Material>(new Material(litSolidTexturedShader, "PhongMap"));
+    auto material = std::shared_ptr<PhongMap>(new PhongMap(litSolidTexturedShader));
+    material->diffuse_ = diffuseMetal;
+    material->emissive_ = emissiveMetal;
+    material->specular_ = specularMetal;
+    material->shininess_ = 1024.0f;
     auto cube2 = std::make_shared<Cube>(material);
-    cube2->material_->phongMap_->diffuse = diffuseMetal;
-    cube2->material_->phongMap_->specular = specularMetal;
-    cube2->material_->phongMap_->emissive = emissiveMetal;
-    cube2->material_->phongMap_->shininess = 1024.0f;
     cube2->SetScale(2);
     app.entities_.push_back(cube2);
 
-    material = std::shared_ptr<Material>(new Material(litSolidTexturedShader, "PhongMap"));    
+    material = std::shared_ptr<PhongMap>(new PhongMap(litSolidTexturedShader));    
+    material->diffuse_ = diffuseBricks;
+    material->specular_ = specularBricks;
+    material->emissive_ = emissiveBricks;
+    material->shininess_ = 128.0f;
     auto cube4 = std::make_shared<Cube>(material);
-    cube4->material_->phongMap_->diffuse = diffuseBricks;
-    cube4->material_->phongMap_->specular = specularBricks;
-    cube4->material_->phongMap_->emissive = emissiveBricks;
-    cube4->material_->phongMap_->shininess = 128.0f;
     cube4->Translate(zzz::ONE*2.0f);
     cube4->Scale(2);
     app.entities_.push_back(cube4);

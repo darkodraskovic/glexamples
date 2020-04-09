@@ -2,7 +2,7 @@
 
 using namespace glm;
 
-Cube::Cube(std::shared_ptr<Material>& material)
+Cube::Cube(const std::shared_ptr<Material>& material)
 {
     material_ = material;
     
